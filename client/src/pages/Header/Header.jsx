@@ -33,8 +33,8 @@ export default function Header({ count, total, data }) {
             <a href="/"><img src="/assets/bg/logo.png" alt="" className='img-fluid' style={{ objectFit: "contain",maxHeight: "113%",paddingLeft: "68px" }} /></a>
           </div>
           <div className='col-5 d-flex py-2 h-100'>
-          <input type="text" placeholder='Bạn tìm gì...' onChange={e=>setSearchInput(e.target.value)} className='form-control border border-2 border-danger'/>
-          <a href={`/product/search?q=${searchInput}`} className='btn btn-danger'><i className='fa fa-search text-white fs-4'></i></a>
+          <input type="text" placeholder='Bạn tìm gì...' onChange={e=>setSearchInput(e.target.value)} className='form-control' style={{ border: "2px solid #011a33" }}/>
+          <a href={`/product/search?q=${searchInput}`} className='btn' style={{ backgroundColor: "#011a33" }}><i className='fa fa-search text-white fs-4'></i></a>
           </div>
           <div className='col-4 d-flex flex-row h-100 justify-content-between'>
             <div className='d-flex h-100 align-items-center py-2'>
