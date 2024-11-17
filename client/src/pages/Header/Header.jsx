@@ -26,7 +26,7 @@ export default function Header({ count, total, data }) {
   };
 
   return (
-    <div>
+    <div className="header">
       <div className='container d-flex py-4' style={{ height: "100px" }}>
         <div className='row w-100 h-100'>
           <div className='col-3 h-100'>

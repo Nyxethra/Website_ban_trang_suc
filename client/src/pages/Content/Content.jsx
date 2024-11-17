@@ -22,25 +22,27 @@ export default function Content({getCart}) {
     getData()
   },[])
   return (
-    <div className='container' style={{ marginTop: "15px" }}>
-      <div className='row g-2 h-100'>
-        <Banner/>
-      </div>
-      <div className='mt-4 w-100 border p-2 h-auto' style={{ backgroundColor: "#f8f9fa" }}>
-        <h4 className='text-dark px-2'>News</h4>
-        <div className='w-100'>
-          <Hightlight getCart={getCart}/>
+    <div className="content">
+      <div className='container' style={{ marginTop: "160px" }}>
+        <div className='row g-2 h-100'>
+          <Banner/>
         </div>
-      </div>
-      {/* product category */}
-      <div className='w-100'>
-        {data?.map((item, index) => (
-          <Category key={index} item={item} getCart={getCart}/>
-        ))}
-      </div>
-      {/* exp user */}
-      <div className='w-100'>
-        <Exp/>
+        <div className='mt-4 w-100 border p-2 h-auto' style={{ backgroundColor: "#f8f9fa" }}>
+          <h4 className='text-dark px-2'>News</h4>
+          <div className='w-100'>
+            <Hightlight getCart={getCart}/>
+          </div>
+        </div>
+        {/* product category */}
+        <div className='w-100'>
+          {data?.map((item, index) => (
+            <Category key={index} item={item} getCart={getCart}/>
+          ))}
+        </div>
+        {/* exp user */}
+        <div className='w-100'>
+          <Exp/>
+        </div>
       </div>
     </div>
   )
