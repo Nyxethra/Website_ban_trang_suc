@@ -83,7 +83,7 @@
     "9",
     "8"
   ],
-  "image": "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fp5.png?alt=media&token=5cec9b65-1fb5-4d55-a436-4c0971e03e09",
+  "image": "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fp2.png?alt=media&token=3e703ea0-8f10-420c-aae4-75ba89cccc80",
   "sub_image": [
     ""
   ],
@@ -91,7 +91,7 @@
     "$date": "2024-03-29T07:11:45.263Z"
   },
   "updatedAt": {
-    "$date": "2024-11-05T14:47:00.645Z"
+    "$date": "2024-11-17T10:26:41.877Z"
   },
   "__v": 0,
   "categoryId": "660509ca168d168dbd35098d"
@@ -104,7 +104,7 @@
   "price": 1445000,
   "description": "Mẫu trang sức tôn lên sự dịu dàng, nhưng cũng không kém phần cá tính, nổi bật. Chúng tôi tin chắc rằng, nàng sẽ trông thật sự nổi bật và thu hút sự chú ý xung quanh.",
   "size": [],
-  "image": "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fp5.png?alt=media&token=58f7f5ea-d58f-4a2b-bbec-df3d9e1ad036",
+  "image": "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fnhan-bac-dinh-da-pnjsilver-1.png?alt=media&token=3f765fcd-03f1-4e34-b69d-9937bb4332a3",
   "sub_image": [
     "https://firebasestorage.googleapis.com/v0/b/imageupload-a6efc.appspot.com/o/product%2Fh1.png?alt=media&token=c1385cba-aba2-412a-9229-87dbd266bf6f",
     "https://firebasestorage.googleapis.com/v0/b/imageupload-a6efc.appspot.com/o/product%2Fh2.png?alt=media&token=45a50928-d69d-4104-bbdf-abbcf3b21663",
@@ -115,7 +115,7 @@
     "$date": "2024-03-29T07:12:40.822Z"
   },
   "updatedAt": {
-    "$date": "2024-11-05T08:27:09.373Z"
+    "$date": "2024-11-17T10:29:32.877Z"
   },
   "__v": 0,
   "categoryId": "660509bf168d168dbd35098a"
@@ -128,7 +128,7 @@
   "price": 9050000,
   "description": "Mẫu trang sức tôn lên sự dịu dàng, nhưng cũng không kém phần cá tính, nổi bật. Chúng tôi tin chắc rằng, nàng sẽ trông thật sự nổi bật và thu hút sự chú ý xung quanh.",
   "size": [],
-  "image": "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fp2.png?alt=media&token=980d7a0f-62dd-4611-a9e9-78c08a4cabe7",
+  "image": "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2F-mat-day-chuyen-vang-24k-pnj-1.png?alt=media&token=433ee656-3b3b-445c-b9de-932af8efabb3",
   "sub_image": [
     "https://firebasestorage.googleapis.com/v0/b/imageupload-a6efc.appspot.com/o/product%2Fj1.png?alt=media&token=f03ad4e7-4646-4771-a08d-179ca700ce38",
     "https://firebasestorage.googleapis.com/v0/b/imageupload-a6efc.appspot.com/o/product%2Fj2.png?alt=media&token=214908d9-f9ea-4319-b882-d0f085e160f5",
@@ -139,8 +139,79 @@
     "$date": "2024-03-29T07:14:43.930Z"
   },
   "updatedAt": {
-    "$date": "2024-11-05T08:26:05.524Z"
+    "$date": "2024-11-17T10:25:15.529Z"
   },
   "__v": 0,
   "categoryId": "660509bf168d168dbd35098a"
+},
+{
+  "_id": {
+    "$oid": "6739c7c5cd86d2b9902d2beb"
+  },
+  "name": "Đồng hồ Disney & Marvel Nam M-9062RGB Dây Da 42 mm",
+  "categoryId": "660509db168d168dbd350993",
+  "price": 1888888,
+  "description": "Giảm 800.000VNĐ cho đơn hàng từ 20.000.000 cho Thẻ tín dụng VPBank khi thanh toán qua PAYOO. \nƯu đãi thêm lên đến 1.5tr khi thanh toán bằng thẻ TECHCOMBANK Giảm 200.000Đ cho hóa đơn mua hàng từ 2.500.000Đ khi thanh toán bằng thẻ tín dụng Muadee by HDBANK \nCơ hội nhận Đồng hồ Kim cương Longines mini Dolcevita. \nTặng phiếu quà tặng đến 400.000Đ khi mua hóa đơn từ 20.000.000Đ ",
+  "size": [
+    "9",
+    "10"
+  ],
+  "image": "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2F-dong-ho-disney-marvel-nam-m-9062rgb-day-da-42-mm-1.png?alt=media&token=75bdf339-1434-4d31-b8b2-e868a8e457c0",
+  "sub_image": [
+    "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fsp-wmdiqf00l42.0073-dong-ho-disney-marvel-nam-m-9062rgb-day-da-42-mm-1.png?alt=media&token=52f919a4-9b92-40d7-a936-02102fae9dc0",
+    "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fon-wmdiqf00l42.0073-dong-ho-disney-marvel-nam-m-9062rgb-day-da-42-mm-1.jpg?alt=media&token=2d3b3990-1000-496a-8c02-2bfbc7b88bcf",
+    "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fsp-wmdiqf00l42.0073-dong-ho-disney-marvel-nam-m-9062rgb-day-da-42-mm-3.png?alt=media&token=7140cada-1558-468a-bb6a-25d4d744c6d2"
+  ],
+  "createdAt": {
+    "$date": "2024-11-17T10:39:01.925Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-17T10:40:07.344Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6739ca00cd86d2b9902d2d52"
+  },
+  "name": "Vòng tay cưới Vàng trắng 10K đính đá ECZ PNJ XMXMW001270",
+  "categoryId": "660509ca168d168dbd35098d",
+  "price": 3666568,
+  "description": "Trọng lượng tham khảo : 33.65893\nHàm lượng chất liệu : 4160\nLoại đá chính : Xoàn mỹ\nLoại đá phụ : Xoàn mỹ\nSố viên đá chính : 1\nGiới tính : Nữ\nSố viên đá phụ : 90\n",
+  "size": [],
+  "image": "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fsp-gvxmxmw001270-vong-tay-vang-10k-dinh-da-ecz-pnj-1.png?alt=media&token=0c2048ce-ad74-45e3-816d-4c979ee262d8",
+  "sub_image": [
+    "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fon-gvxmxmw001270-vong-tay-vang-10k-dinh-da-ecz-pnj-1.jpg?alt=media&token=9d42c410-335c-4b37-b8c5-34e37a6b855e",
+    "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fon-gvxmxmw001270-vong-tay-vang-10k-dinh-da-ecz-pnj-3.jpg?alt=media&token=568d7d07-ac48-4204-a643-e546f569434e",
+    "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fsp-gvxmxmw001270-vong-tay-vang-10k-dinh-da-ecz-pnj-1.png?alt=media&token=b6fa305d-e894-4f09-bb86-382f259954a5"
+  ],
+  "createdAt": {
+    "$date": "2024-11-17T10:48:32.109Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-17T10:48:32.109Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6739cbbecd86d2b9902d2e8f"
+  },
+  "name": "Đồng hồ Citizen L Nữ EM1113-82Y Dây Kim Loại 30 mm",
+  "categoryId": "660509db168d168dbd350993",
+  "price": 9222456,
+  "description": "Chất liệu  : Dây thép cc không gỉ 316L\nChất liệu vỏ : Thép không gỉ\nHình dạng mặt : Tròn\nMàu sắc mặt : Xanh lá cây\nKích thước mặt : 30\nĐộ chịu nước : 5\nĐộ dày vỏ máy : 7\nSố Kim : 3\nĐá Gắn Kèm Đồng Hồ : Kim cương.\nChứng nhận Chronometer : Không\nGiới tính : Nữ\nMàu sắc dây : Vàng\nPhong cách : Japan made\nThương hiệu : Citizen",
+  "size": [],
+  "image": "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fsp-wfciejdds30.0859-dong-ho-citizen-l-nu-em1113-82y-day-kim-loai-30-mm-1.png?alt=media&token=e94d889f-e339-4967-b04e-f840d06b9095",
+  "sub_image": [
+    "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fsp-wfciejdds30.0859-dong-ho-citizen-l-nu-em1113-82y-day-kim-loai-30-mm-2.png?alt=media&token=a8de4197-9d49-4824-803b-87db909ea244",
+    "https://firebasestorage.googleapis.com/v0/b/uploadimage-9bd72.appspot.com/o/product%2Fsp-wfciejdds30.0859-dong-ho-citizen-l-nu-em1113-82y-day-kim-loai-30-mm-3.png?alt=media&token=b230fd22-583d-4311-b86b-1aea8287ee8f"
+  ],
+  "createdAt": {
+    "$date": "2024-11-17T10:55:58.488Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-17T10:55:58.488Z"
+  },
+  "__v": 0
 }]
