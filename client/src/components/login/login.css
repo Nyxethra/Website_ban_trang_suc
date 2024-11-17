@@ -1,0 +1,17 @@
+.login_right{
+    display:none;
+}
+.login_left{
+    animation: loginInLeft ease 1s;
+}
+
+@keyframes loginInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(240px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

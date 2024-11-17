@@ -1,0 +1,15 @@
+li{
+ border-radius: 6px;
+}
+li a{
+    color: black;
+    border-radius: 10px;
+}
+.sidebar_ul li i{
+    right:75%
+}
+.sidebar_ul li a:hover{
+    cursor: pointer;
+    background-color: rgb(226, 45, 28);
+    color: white;
+}
