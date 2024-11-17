@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import "bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css"
 import 'font-awesome/css/font-awesome.min.css'
+import './index.css'
 import App from './App';
 import { Provider } from 'react-redux';
 import {persistor,store} from './redux/store';

@@ -1,35 +1,65 @@
 import React from 'react'
 
 export default function Exp() {
+  const reviews = [
+    {
+      name: "Nguyenquoctien",
+      service: "Nhẫn kim cương",
+      review: "Nhẫn kim cương tuyệt đẹp, giá cả hợp lý và dịch vụ rất tốt!",
+    },
+    {
+      name: "Lê Thị Lành",
+      service: "Dây chuyền vàng",
+      review: "Dây chuyền vàng tinh xảo, tôi rất hài lòng với chất lượng sản phẩm.",
+    },
+    {
+      name: "Nguyễn Dũng",
+      service: "Bông tai bạc",
+      review: "Bông tai bạc rất đẹp, dịch vụ chăm sóc khách hàng chu đáo.",
+    },
+    {
+      name: "Trần Đỗ Đức Nghĩa",
+      service: "Lắc tay ngọc trai",
+      review: "Lắc tay ngọc trai sang trọng, tôi sẽ quay lại mua thêm sản phẩm khác.",
+    },
+  ];
+
   return (
     <div className='my-3 w-100 h-100'>
-    {/* category title */}
-    <div className='d-flex justify-content-between border bg-light px-2 py-1'>
-      <h3 className='text-danger'>Trải nghiệm người dùng</h3>
-      <div className='border border-1 rounded-3 my-1 d-flex align-items-center'>
-        <a href="" className='text-decoration-none mx-2 text-danger'>Xem thêm</a>
-        <i className='fa fa-angle-right text-danger'></i>
+      <h2 className='text-center text-uppercase text-dark'>Đánh giá của khách hàng</h2>
+      <p className='text-center text-muted'>Được tin tưởng bởi hơn 10.000 khách hàng!</p>
+      <div className='row'>
+        {reviews.map((review, index) => (
+          <div key={index} className='col-lg-3 col-md-4 col-sm-6 mb-4'>
+            <div className='card border-0 shadow h-100'>
+              <div className='card-body'>
+                <div className='d-flex align-items-center mb-3'>
+                  <img
+                    src='https://via.placeholder.com/50'
+                    alt='avatar'
+                    className='rounded-circle me-3'
+                  />
+                  <div>
+                    <h5 className='card-title mb-0'>{review.name}</h5>
+                    <p className='card-subtitle text-muted'>{review.service}</p>
+                  </div>
+                </div>
+                <div className='d-flex align-items-center mb-2'>
+                  <span className='badge bg-success me-2'>Đã sử dụng dịch vụ</span>
+                  <div className='text-warning'>
+                    <i className='fa fa-star'></i>
+                    <i className='fa fa-star'></i>
+                    <i className='fa fa-star'></i>
+                    <i className='fa fa-star'></i>
+                    <i className='fa fa-star'></i>
+                  </div>
+                </div>
+                <p className='card-text'>{review.review}</p>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
-    {/* category product list */}
-    <div className='row m-1 px-1 d-flex justify-content-between'style={{height:"300px"}}>
-        <div className="col-6 ">
-            <iframe src="https://www.youtube.com/embed/lZMiD4gBC4M?list=PLzIvXH9OQtJMLZqwjqwKeiUtsrbit5O-k" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen frameborder="0" className='w-100 h-100' >
-            </iframe>
-        </div>
-        <div className="col-6">
-            <div className='row'>
-                <iframe className="col-6" src="https://www.youtube.com/embed/lZMiD4gBC4M?list=PLzIvXH9OQtJMLZqwjqwKeiUtsrbit5O-k" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen frameborder="0" >
-                </iframe>
-                <iframe className="col-6" src="https://www.youtube.com/embed/JFJWj80aWjk?list=PLzIvXH9OQtJMLZqwjqwKeiUtsrbit5O-k" allowFullScreen frameborder="0">
-                </iframe>
-                <iframe className="col-6" src="https://www.youtube.com/embed/bUTktW_EwSw" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen frameborder="0" >
-                </iframe>
-                <iframe className="col-6" src="https://www.youtube.com/embed/RpIkEKDgh2o" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen frameborder="0">
-                </iframe>
-            </div>
-        </div>
-    </div>
-  </div>
-  )
+  );
 }
