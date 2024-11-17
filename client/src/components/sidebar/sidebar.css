@@ -1,14 +1,40 @@
-li{
- border-radius: 6px;
+.sidebar {
+    position: absolute;
+    top: 100%; /* Đảm bảo sidebar xuất hiện ngay dưới phần trigger */
+    left: 0;
+    width: 250px; /* Điều chỉnh độ rộng nếu cần */
+    background-color: #d9d9d9;
+    z-index: 1000; /* Đảm bảo nó nằm trên các phần tử khác */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
 }
-li a{
+
+.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+li {
+    border-radius: 6px;
+}
+
+li a {
     color: black;
     border-radius: 10px;
 }
-.sidebar_ul li i{
-    right:75%
+
+.sidebar_ul li i {
+    right: 75%;
 }
-.sidebar_ul li a:hover{
+
+.sidebar_ul li a:hover {
     cursor: pointer;
     background-color: rgb(226, 45, 28);
     color: white;

@@ -4,7 +4,7 @@ import React, { useEffect, useState ,useRef} from 'react'
 export default function Footer() {
 
   return (
-    <div className='mt-0 position-relative'style={{height:"250px",backgroundColor:"#140202"}}>
+    <div className='mt-0 position-relative'style={{height:"250px",backgroundColor:"#2f2f2f", color:"#b0b0b0"}}>
       <div className='row mx-5'>
         <div className='col-5 my-4 d-flex flex-column'>
           <h6 className='text-white'>NHANH JEWELRY FROM Nhom12_trua_t5.VN</h6>

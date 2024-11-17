@@ -24,14 +24,11 @@ export default function Content({getCart}) {
   return (
     <div className='container'>
       <div className='row g-2 h-100'>
-          <div className="col-3">
-          <SideBar/>
-          </div>
-          <div className='col-9'>
+
           <Banner/>
-          </div>
+
       </div>
-      <div className=' mt-4 w-100 bg-danger border rounded-4 p-2 h-auto'>
+      <div className=' mt-4 w-100 border p-2 h-auto' style={{ backgroundColor: "#011a33" }}>
               <h4 className='text-white px-2'>News</h4>
               <div className='w-100'>
               <Hightlight getCart={getCart}/>
