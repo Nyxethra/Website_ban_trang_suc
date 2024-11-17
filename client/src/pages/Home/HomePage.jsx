@@ -49,17 +49,19 @@ useEffect(()=>{
   return (
     <div className='w-100 d-flex flex-column'>
         <Header count={count} getCart={getCart} total={total} data={data}/>
-         <div className='bg-light' >
-            <Routes>
-                <Route index element={<Content getCart={getCart}/>}/>
-                <Route path='login' element={!currentUser ?<Login/>:<Navigate to="/"/>}/>
-                <Route path='cart' element={currentUser ? <Cart getCart={getCart} data={data} total={total}/>: <Navigate to="/login"/>}/>
-                <Route path='product/productDetail/:id' element={<ProductDetail getCart={getCart}/>}/>
-                <Route path='product/search/*' element={<Search getCart={getCart}/>}/>
-                <Route path='product/category/:id' element={<Category getCart={getCart}/>}/>
-                <Route path='/profile/*' element={currentUser ?<Profile/>:<Navigate to="/login"/>}/>
-                <Route path='/cart/checkout' element={<Payment total={total} getCart={getCart} data={data}/>}/>
-            </Routes>
+         <div className='content-wrapper'>
+            <div className='bg-light' >
+                <Routes>
+                    <Route index element={<Content getCart={getCart}/>}/>
+                    <Route path='login' element={!currentUser ?<Login/>:<Navigate to="/"/>}/>
+                    <Route path='cart' element={currentUser ? <Cart getCart={getCart} data={data} total={total}/>: <Navigate to="/login"/>}/>
+                    <Route path='product/productDetail/:id' element={<ProductDetail getCart={getCart}/>}/>
+                    <Route path='product/search/*' element={<Search getCart={getCart}/>}/>
+                    <Route path='product/category/:id' element={<Category getCart={getCart}/>}/>
+                    <Route path='/profile/*' element={currentUser ?<Profile/>:<Navigate to="/login"/>}/>
+                    <Route path='/cart/checkout' element={<Payment total={total} getCart={getCart} data={data}/>}/>
+                </Routes>
+            </div>
          </div> 
         <Footer/> 
     </div>

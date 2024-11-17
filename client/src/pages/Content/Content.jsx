@@ -23,7 +23,7 @@ export default function Content({getCart}) {
   },[])
   return (
     <div className="content">
-      <div className='container' style={{ marginTop: "160px" }}>
+      <div className='container'>
         <div className='row g-2 h-100'>
           <Banner/>
         </div>

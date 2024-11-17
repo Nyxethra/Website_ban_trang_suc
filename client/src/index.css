@@ -37,6 +37,9 @@ code {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Tạo bóng cho header */
 }
 
-.content {
-  margin-top: 60px; /* Điều chỉnh khoảng cách để không bị che bởi header */
+.content-wrapper {
+  margin-top: 160px;
 }
+
+
+

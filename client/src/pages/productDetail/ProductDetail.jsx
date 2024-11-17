@@ -188,7 +188,7 @@ export default function ProductDetail({getCart}) {
                         </div>
                         <div className='w-100 bg-light p-2'>
                             <h5>HỖ TRỢ KHÁCH HÀNG</h5>
-                            <p>Mọi thắc mắc vui lòng liên hệ Hotline/ Zalo: 0789.123.xxx hoặc thông qua www.facebook.com/nhom12_trua_t5.vn để được giải đáp và hỗ trợ.</p>
+                            <p>Mọi thắc mắc vui lòng liên hệ Hotline/ Zalo: 0826.123.xxx hoặc thông qua www.facebook.com/Nhanh.vn để được giải đáp và hỗ trợ.</p>
                         </div>
                         <div className='w-100 bg-light p-2 mt-2'>
                             <p  >Mẫu trang sức tôn lên sự dịu dàng, nhưng cũng không kém phần cá tính, nổi bật. Chúng tôi tin chắc rằng, nàng sẽ trông thật sự nổi bật và thu hút sự chú ý xung quanh.</p>
