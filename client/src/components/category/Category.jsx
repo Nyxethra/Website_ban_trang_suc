@@ -1,13 +1,14 @@
 import React from 'react'
 import numeral from 'numeral'
 import axios from '../../axios'
+import './Category.css'
 
-export default function Category({item,getCart}) {
-  const handleAdd=async(id,price)=>{
+export default function Category({item, getCart}) {
+  const handleAdd = async(id, price) => {
     try {
-      await axios.post("/cart/create",{
-        productId:id,
-        totalAmount:price
+      await axios.post("/cart/create", {
+        productId: id,
+        totalAmount: price
       })
       getCart()
       alert("Add to cart success")
@@ -15,35 +16,72 @@ export default function Category({item,getCart}) {
       console.log(err)
     }
   }
+
+  const handleImageError = (e) => {
+    e.target.src = '/path/to/fallback-image.jpg'
+    e.target.onerror = null
+  }
+
   return (
-    <div className='my-3 w-100 h-100'>
-    {/* category title */}
-    <div className='d-flex justify-content-between border bg-light px-2 py-1'>
-      <h3 className='text-#b8860b'>{item.category}</h3>
-      <div className='border border-1 rounded-3 my-1 d-flex align-items-center'>
-        <a href={`product/category/${item.categoryId}`} className='text-decoration-none mx-2 text-#b8860b'>Xem thêm</a>
-        <i className='fa fa-angle-right text-#b8860b'></i>
+    <div className='my-5'>
+      {/* Category Header */}
+      <div className='mb-4'>
+        <h3 className='category-title mb-0'>{item.category}</h3>
+        <div className='category-divider mt-2'></div>
+      </div>
+
+      {/* Category Products */}
+      <div className='row g-4'>
+        {item.products.map(p => (
+          <div className='col-lg-3 col-md-4 col-sm-6' key={p._id}>
+            <div className='category-product-card'>
+              <a href={`/product/productDetail/${p._id}`} className='product-link' style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                <div className='product-image-wrapper'>
+                  <img 
+                    src={p.image} 
+                    alt={p.name} 
+                    className='product-image'
+                    onError={handleImageError}
+                    loading="lazy"
+                    style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                  />
+                </div>
+                
+                <div className='product-details'>
+                  <h4 className='product-name' style={{ margin: '10px 0', fontSize: '1rem' }}>{p.name}</h4>
+                  
+                  <div className='product-price mb-3' style={{ color: '#d4a556', fontWeight: 'bold' }}>
+                    {numeral(p.price).format('0,0')} ₫
+                  </div>
+                </div>
+              </a>
+              
+              <button 
+                className='add-to-cart-btn mt-auto'
+                onClick={() => handleAdd(p._id, p.price)}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  backgroundColor: '#d4a556',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}>
+                Thêm vào giỏ hàng
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* View More Button */}
+      <div className='text-center mt-4'>
+        <a href={`product/category/${item.categoryId}`} 
+           className='view-more-link'>
+          Xem thêm sản phẩm
+        </a>
       </div>
     </div>
-    {/* category product list */}
-    <div className='row row-cols-5 m-1'>
-        {item.products.map(p=>(
-            <div className='p-1' key={p._id}>
-                <div className="border d-flex flex-column rounded-3 bg-white p-1" style={{height:"350px"}}>
-                    <div className='h-75 w-100' style={{borderBottom:"1px solid black"}}>
-                        <a href="" className='w-100 h-100 d-flex flex-column text-decoration-none text-dark'>
-                            <img src={p.image} alt="" className='w-100 h-75' />
-                            <div className='h-25'>{p.name}</div>
-                        </a>
-                    </div>
-                    <div className='py-2 d-flex flex-column h-25 w-100'>
-                        <div className='text-#b8860b fw-bold h-50'>{numeral(p.price).format('0,0')} ₫</div>
-                        <div type="button" className='fw-bold bg-secondary rounded-3 h-50 d-flex justify-content-center align-items-center' style={{fontSize:"14px"}} onClick={()=>handleAdd(p._id,p.price)}>Thêm vào giỏ hàng</div>
-                    </div>
-                </div>
-            </div>
-        ))}
-        </div>
-  </div>
   )
 }

@@ -110,7 +110,7 @@ export default function Payment({data,total,getCart}) {
     <div className='w-100 my-2'>
       <div className='container'>
         <div className='w-100'>
-            <span className='d-flex text-dark'>Bạn có m�� ưu đãi? <div type="button" className='text-#b8860b'> Ấn vào đây để nhập mã</div></span>
+            <span className='d-flex text-dark'>Bạn có mã ưu đãi? <div type="button" className='text-#b8860b'> Ấn vào đây để nhập mã</div></span>
             <div className='border border-2 border-#b8860b p-3 d-none'>
                 <span className='text-dark'>Nếu bạn có mã giảm giá, vui lòng điền vào phía bên dưới.</span>
                 <div className='w-100 d-flex mt-3'>

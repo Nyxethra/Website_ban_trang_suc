@@ -27,9 +27,13 @@ export default function Content({getCart}) {
         <div className='row g-2 h-100'>
           <Banner/>
         </div>
-        <div className='mt-4 w-100 border p-2 h-auto' style={{ backgroundColor: "#f8f9fa" }}>
-          <h4 className='text-dark px-2'>Sản phẩm mới</h4>
-          <div className='w-100'>
+        <div className='mt-5 pt-5 w-100 border-0 p-0 h-auto'>
+          <div className='text-center position-relative mb-4'>
+            <h4 className='section-title d-inline-block m-0 position-relative'>
+              Sản phẩm mới
+            </h4>
+          </div>
+          <div className='w-100 mt-4'>
             <Hightlight getCart={getCart}/>
           </div>
         </div>

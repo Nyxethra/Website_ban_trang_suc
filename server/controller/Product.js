@@ -99,7 +99,7 @@ exports.ProductByCategory=async(req,reply)=>{
         const data = [];
 
         for (const item of category) {
-            const products = await Product.find({ categoryId: item._id }).limit(5);
+            const products = await Product.find({ categoryId: item._id }).limit(15);
             
             data.push({ category: item.name,categoryId: item._id, products });
         }
@@ -110,7 +110,14 @@ exports.ProductByCategory=async(req,reply)=>{
 }
 exports.ProductNew=async(req,reply)=>{
     try {
-       const product=await Product.find().sort({createdAt:-1}).limit(5)
+        const {limit = 15, page = 1} = req.query
+        const skip = (page - 1) * limit
+        
+        const product = await Product.find()
+            .sort({createdAt: -1})
+            .skip(skip)
+            .limit(parseInt(limit))
+            
         reply.code(200).send(product)
     } catch (err) {
         reply.code(500).send(err)
