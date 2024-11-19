@@ -30,7 +30,7 @@ export default function Home() {
       <div className='row h-100'>
         <div className='col-3 admin-sidebar'>
           <div className='sidebar-header'>
-            <a href='/'>QUẢN TRỊ VIÊN</a>
+            <a href='/admin'>QUẢN TRỊ VIÊN</a>
           </div>
           
           <div className='sidebar-menu'>
