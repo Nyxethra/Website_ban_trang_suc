@@ -1,41 +1,56 @@
-.sidebar {
-    position: absolute;
-    top: 100%; /* Đảm bảo sidebar xuất hiện ngay dưới phần trigger */
-    left: 0;
-    width: 250px; /* Điều chỉnh độ rộng nếu cần */
-    background-color: #d9d9d9;
-    z-index: 1000; /* Đảm bảo nó nằm trên các phần tử khác */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    opacity: 0;
-    visibility: hidden;
+.category-nav {
+  background-color: #fff;
+  width: 100%;
 }
 
-.visible {
-    opacity: 1;
-    visibility: visible;
+.category-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: flex-start;
 }
 
-.hidden {
-    opacity: 0;
-    visibility: hidden;
+.category-item {
+  position: relative;
+  padding: 15px 25px;
 }
 
-li {
-    border-radius: 6px;
+.category-item a {
+  color: #333;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 400;
+  text-transform: uppercase;
+  position: relative;
 }
 
-li a {
-    color: black;
-    border-radius: 10px;
+.category-item a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #b8860b;
+  transition: width 0.3s ease;
 }
 
-.sidebar_ul li i {
-    right: 75%;
+.category-item:hover a {
+  color: #b8860b;
 }
 
-.sidebar_ul li a:hover {
-    cursor: pointer;
-    background-color: #011a33;
-    color: white;
+.category-item:hover a::after {
+  width: 100%;
+}
+
+.category-item.active a {
+  color: #c4161c;
+}
+
+.sidebar,
+.visible,
+.hidden,
+.sidebar_ul {
+  display: none;
 }
