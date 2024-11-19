@@ -35,10 +35,27 @@ code {
   z-index: 1000; /* Đảm bảo header nằm trên các phần tử khác */
   background-color: #fff; /* Màu nền của header */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Tạo bóng cho header */
+  border-top: 1px solid #e5e5e5; /* Thêm đường kẻ xám phía trên */
 }
 
 .content-wrapper {
   margin-top: 160px;
+}
+
+.container-fluid {
+  position: relative;
+}
+
+.container-fluid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1400px;
+  height: 1px;
+  background-color: #e5e5e5;
 }
 
 

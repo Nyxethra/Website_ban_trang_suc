@@ -80,20 +80,9 @@ export default function Header({ count, total, data }) {
           </div>
         </div>
       </div>
-      <div className='container-fluid text-white' style={{ height: "50px", backgroundColor: "#011a33" }}>
-        <div className='container d-flex h-100'>
-          <div className='d-flex w-25 h-100 py-2 position-relative' onMouseEnter={handleSidebarEnter} onMouseLeave={handleSidebarLeave}>
-            <i className='fa fa-bars mx-2 align-self-center fs-4' />
-            <h2 className='fs-6 align-self-center my-1'>Danh mục sản phẩm</h2>
-            <SideBar isVisible={isSidebarVisible} />
-          </div>
-          <div className='w-75 h-100 d-flex py-2'>
-            <ul className='d-flex list-unstyled py-1'>
-              <li className='px-2'><a href="" className='text-white' style={{ textDecoration: "none" }}>Về chúng tôi</a></li>
-              <li className='px-2'><a href="" className='text-white' style={{ textDecoration: "none" }}>Khuyễn mại</a></li>
-              <li className='px-2'><a href="" className='text-white' style={{ textDecoration: "none" }}>Tin tức</a></li>
-            </ul>
-          </div>
+      <div className='container-fluid' style={{ borderBottom: "1px solid #e5e5e5" }}>
+        <div className='container'>
+          <SideBar />
         </div>
       </div>
     </div>
