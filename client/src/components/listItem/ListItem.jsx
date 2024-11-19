@@ -28,7 +28,7 @@ export default function ListItem({data,getCart}) {
                       </a>
                   </div>
                   <div className='py-2 d-flex flex-column h-25 w-100'>
-                      <div className='text-danger fw-bold h-50'>{numeral(item?.price).format('0,0')} ₫</div>
+                      <div className='text-#b8860b fw-bold h-50'>{numeral(item?.price).format('0,0')} ₫</div>
                       <div type="button" className='fw-bold bg-secondary rounded-3 h-50 d-flex justify-content-center align-items-center' style={{fontSize:"14px"}} onClick={()=>handleAdd(item?._id,item?.price)}>Thêm vào giỏ hàng</div>
                   </div>
               </div>

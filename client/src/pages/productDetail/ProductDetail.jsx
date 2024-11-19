@@ -157,7 +157,7 @@ export default function ProductDetail({getCart}) {
   return (
     <div className='w-100'>
       <div className='container' style={{height:"30px"}}>
-        <span style={{color:"#ff8c00",textTransform:"uppercase"}}><a href="/" className='text-decoration-none' style={{color:"#ff8c00"}}>Trang chủ</a>/ Chi tiết sản phẩm</span>
+        <span style={{color:"#b8860b",textTransform:"uppercase"}}><a href="/" className='text-decoration-none' style={{color:"#b8860b"}}>Trang chủ</a>/ Chi tiết sản phẩm</span>
       </div>
       <div className='w-100'>
         <div className='container'>
@@ -183,12 +183,12 @@ export default function ProductDetail({getCart}) {
                         <div className='w-100'>
                             <h4>{data?.name}</h4>
                         </div>
-                        <div className='w-100 text-danger'>
+                        <div className='w-100 text-#b8860b'>
                             <h5 className='fw-bold'>{numeral(data?.price).format('0,0')} ₫</h5>
                         </div>
                         <div className='w-100 bg-light p-2'>
                             <h5>HỖ TRỢ KHÁCH HÀNG</h5>
-                            <p>Mọi thắc mắc vui lòng liên hệ Hotline/ Zalo: 0826.123.xxx hoặc thông qua www.facebook.com/Nhanh.vn để được giải đáp và hỗ trợ.</p>
+                            <p>Mọi thắc mắc vui lòng liên hệ Hotline/ Zalo: 0826.123.xxx hoặc thông qua www.facebook.com/nhóm12.vn để được giải đáp và hỗ trợ.</p>
                         </div>
                         <div className='w-100 bg-light p-2 mt-2'>
                             <p  >Mẫu trang sức tôn lên sự dịu dàng, nhưng cũng không kém phần cá tính, nổi bật. Chúng tôi tin chắc rằng, nàng sẽ trông thật sự nổi bật và thu hút sự chú ý xung quanh.</p>
@@ -218,7 +218,7 @@ export default function ProductDetail({getCart}) {
                 </div>
                 <div className='mb-4' style={{marginRight:"20px"}}>
                     <nav className='w-100 d-flex'>
-                        <div className='bg-light border-top border-4 border-danger text-center' ref={tabHome} style={{width:"100px",height:"30px",cursor:"pointer"}} onClick={handleHomeTab}>Mô tả</div>
+                        <div className='bg-light border-top border-4 border-#b8860b text-center' ref={tabHome} style={{width:"100px",height:"30px",cursor:"pointer"}} onClick={handleHomeTab}>Mô tả</div>
                         <div className='bg-light text-center' ref={tabProfile} style={{width:"100px",height:"30px",cursor:"pointer"}} onClick={handleProfileTab}>Đánh giá({comments.count})</div>
                     </nav>
                     <div className='mt-0 w-100'>
@@ -227,7 +227,7 @@ export default function ProductDetail({getCart}) {
                         </div>
                         <div className='border border-1 p-4 d-none' ref={profileTabRef}>
                             <h5 className='fw-bold'>Đánh giá ({comments?.average}/5)</h5>
-                            <div className='w-100 border border-2 border-danger my-1 p-4'>
+                            <div className='w-100 border border-2 border-#b8860b my-1 p-4'>
                                 <div className='d-flex'>
                                     <p className='fw-bold'>Đánh giá của bạn:</p>
                                     <select name="star" onChange={changeInput} id="" className='mx-4' style={{width:"70px",height:"30px"}}>
@@ -243,8 +243,8 @@ export default function ProductDetail({getCart}) {
                                 <div className='w-100 mb-4'>
                                     <input type="file" id='image' accept="image/*" onChange={e=>setImage(e.target.files[0])} name='image' hidden/>
                                     <input type="file" id='video' accept="video/*" onChange={e=>setVideo(e.target.files[0])} name='video' hidden/>
-                                    <label type="button" htmlFor="image" className='border border-2 border-danger py-2 text-center' style={{fontSize:"12px",width:'100px',height:'40px'}}><i className='fa fa-photo text-danger'></i>Thêm ảnh</label>
-                                    <label type="button" htmlFor="video" className="border border-2 border-danger mx-2 py-2 text-center" style={{fontSize:"12px",width:'100px',height:'40px'}}><i className='fa fa-camera text-danger'></i>Thêm video</label>
+                                    <label type="button" htmlFor="image" className='border border-2 border-#b8860b py-2 text-center' style={{fontSize:"12px",width:'100px',height:'40px'}}><i className='fa fa-photo text-#b8860b'></i>Thêm ảnh</label>
+                                    <label type="button" htmlFor="video" className="border border-2 border-#b8860b mx-2 py-2 text-center" style={{fontSize:"12px",width:'100px',height:'40px'}}><i className='fa fa-camera text-#b8860b'></i>Thêm video</label>
                                     <div className='d-flex flex-wrap gap-2 mt-1 w-100 '>
                                         {imageUrl && imageUrl.map(i=>(
                                             <img src={i} alt="" style={{width:"70px",height:"70px"}}/>
@@ -257,7 +257,7 @@ export default function ProductDetail({getCart}) {
                                     </div>  
                                 </div>
                                 <div className='border border-1 border-dark bg-light fs-5 d-flex justify-content-center align-items-center' onClick={handleClick} style={{width:"100px",height:"40px",cursor:"pointer"}}>Gửi đi</div>
-                                <div className='w-100 mt-3 border-top border-4 border-dark'>
+                                <div className='w-100 mt-3 border-top border-4 border-#b8860b'>
                                      {comments?.data?.map((c,index)=>(
                                     <div className='w-100 border-bottom border-1' key={index}>
                                          <div className='d-flex mt-3 align-items-center' key={index}>
@@ -322,43 +322,43 @@ export default function ProductDetail({getCart}) {
                             <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
                                 <img src="/assets/paper/p1.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
                             </div>
-                            <span style={{fontSize:"12px",color:"red"}}>Kim cương rời là gì? Có nên mua kim cương rời không?</span>
+                            <span style={{fontSize:"12px",color:"#b8860b"}}>Kim cương rời là gì? Có nên mua kim cương rời không?</span>
                         </div>
                         <div className='mt-2 w-100 d-flex border-bottom'>
                             <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
                                 <img src="/assets/paper/p2.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
                             </div>
-                            <span style={{fontSize:"12px",color:"red"}}>Ghi trọn khoảnh khắc trăm năm với những mẫu trang sức mới nhất</span>
+                            <span style={{fontSize:"12px",color:"#b8860b"}}>Ghi trọn khoảnh khắc trăm năm với những mẫu trang sức mới nhất</span>
                         </div>
                         <div className='mt-2 w-100 d-flex border-bottom'>
                             <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
                                 <img src="/assets/paper/p3.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
                             </div>
-                            <span style={{fontSize:"12px",color:"red"}}>Bí quyết phối áo len sành điệu cho thời trang dạo phố cuối năm</span>
+                            <span style={{fontSize:"12px",color:"#b8860b"}}>Bí quyết phối áo len sành điệu cho thời trang dạo phố cuối năm</span>
                         </div>
                         <div className='mt-2 w-100 d-flex border-bottom'>
                             <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
                                 <img src="/assets/paper/p4.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
                             </div>
-                            <span style={{fontSize:"12px",color:"red"}}>PHÙ PHÉP KIM CƯƠNG ĐỂ MÓC TÚI NGƯỜI MUA</span>
+                            <span style={{fontSize:"12px",color:"#b8860b"}}>PHÙ PHÉP KIM CƯƠNG ĐỂ MÓC TÚI NGƯỜI MUA</span>
                         </div>
                         <div className='mt-2 w-100 d-flex border-bottom'>
                             <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
                                 <img src="/assets/paper/p5.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
                             </div>
-                            <span style={{fontSize:"12px",color:"red"}}>VÀNG TRẮNG LÀ GÌ? GIÁ BAO NHIÊU? CÓ BỊ ĐEN HAY KHÔNG</span>
+                            <span style={{fontSize:"12px",color:"#b8860b"}}>VÀNG TRẮNG LÀ GÌ? GIÁ BAO NHIÊU? CÓ BỊ ĐEN HAY KHÔNG</span>
                         </div>
                         <div className='mt-2 w-100 d-flex border-bottom'>
                             <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
                                 <img src="/assets/paper/p6.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
                             </div>
-                            <span style={{fontSize:"12px",color:"red"}}>Hướng dẫn phân biệt kim cương thiên nhiên và kim cương nhân tạo</span>
+                            <span style={{fontSize:"12px",color:"#b8860b"}}>Hướng dẫn phân biệt kim cương thiên nhiên và kim cương nhân tạo</span>
                         </div>
                         <div className='mt-2 w-100 d-flex border-bottom'>
                             <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
                                 <img src="/assets/paper/p7.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
                             </div>
-                            <span style={{fontSize:"12px",color:"red"}}>Mặc áo dài truyền thống, những phụ kiện nào sẽ phù hợp nhất với nàng?</span>
+                            <span style={{fontSize:"12px",color:"#b8860b"}}>Mặc áo dài truyền thống, những phụ kiện nào sẽ phù hợp nhất với nàng?</span>
                         </div>
                     </div>
                 </div>

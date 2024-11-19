@@ -57,7 +57,7 @@ export default function Header({ count, total, data }) {
                       <div className='w-25'>
                         <img src={item?.product[0]?.image} alt="" className='img-fluid' />
                       </div>
-                      <div className='w-75 text-danger d-flex flex-column'>
+                      <div className='w-75 text-#b8860b d-flex flex-column'>
                         <span className='' style={{ fontSize: "12px" }}>{item?.product[0]?.name} x{item.quantity}</span>
                         <span className='fw-bold'>{numeral(item?.product[0]?.price).format('0,0')} đ</span>
                       </div>
@@ -66,9 +66,9 @@ export default function Header({ count, total, data }) {
                   }
 
                   <div className='border-bottom fs-5 text-center py-2'>Tổng: {numeral(total).format('0,0')} đ</div>
-                  <div className='container my-2 d-flex flex-column '>
-                    <a href="/cart" className='text-decoration-none text-white bg-danger rounded-3 py-1 fw-bold text-center mb-1'>Xem Giỏ Hàng</a>
-                    <a href="" className='text-decoration-none text-white bg-danger rounded-3 py-1 fw-bold text-center mb-1'>Thanh Toán</a>
+                  <div className='container my-2 d-flex flex-column'>
+                    <a href="/cart" className='text-decoration-none text-dark bg-light border border-#b8860b rounded-3 py-1 fw-bold text-center mb-1 hover-effect'>Xem Giỏ Hàng</a>
+                    <a href="/cart/checkout" className='text-decoration-none text-dark bg-light border border-#b8860b rounded-3 py-1 fw-bold text-center mb-1 hover-effect'>Thanh Toán</a>
                   </div>
                 </div>
               </div>

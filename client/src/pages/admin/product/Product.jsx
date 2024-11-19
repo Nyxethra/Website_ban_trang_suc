@@ -43,8 +43,8 @@ export default function Product() {
   return (
     <div className='w-100 h-100 mt-2'>  
       <div className='d-flex w-100' style={{height:"40px"}}>
-        <div type="button" className={`${!open ? "border-top border-4 border-danger":""} bg-white fw-bold p-2 text-center`} onClick={tabAll} style={{width:"100px"}}>Tất cả</div>
-        <div type="button" className={`${open ? "border-top border-4 border-danger":""} bg-white fw-bold p-2 text-center`} onClick={tabAdd} style={{width:"100px"}}>Thêm mới</div>
+        <div type="button" className={`${!open ? "border-top border-4 border-#b8860b":""} bg-white fw-bold p-2 text-center`} onClick={tabAll} style={{width:"100px"}}>Tất cả</div>
+        <div type="button" className={`${open ? "border-top border-4 border-#b8860b":""} bg-white fw-bold p-2 text-center`} onClick={tabAdd} style={{width:"100px"}}>Thêm mới</div>
       </div>
       <div className='w-100'>
         {!open 
@@ -66,7 +66,7 @@ export default function Product() {
                   <th>{p.name}</th>
                   <th>{numeral(p.price).format('0,0')}</th>
                   <th className='fs-6'>
-                    <td><i className='fa fa-trash text-danger' onClick={()=>handleDelete(p._id)}></i></td>
+                    <td><i className='fa fa-trash' style={{color:"#b8860b"}} onClick={()=>handleDelete(p._id)}></i></td>
                     <td><i className='fa fa-pencil mx-2 text-primary' onClick={()=>handleUpdate(p._id)}></i></td>
                   </th>
                 </tr>

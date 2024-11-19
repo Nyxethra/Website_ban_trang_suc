@@ -19,10 +19,10 @@ export default function Category({item,getCart}) {
     <div className='my-3 w-100 h-100'>
     {/* category title */}
     <div className='d-flex justify-content-between border bg-light px-2 py-1'>
-      <h3 className='text-danger'>{item.category}</h3>
+      <h3 className='text-#b8860b'>{item.category}</h3>
       <div className='border border-1 rounded-3 my-1 d-flex align-items-center'>
-        <a href={`product/category/${item.categoryId}`} className='text-decoration-none mx-2 text-danger'>Xem thêm</a>
-        <i className='fa fa-angle-right text-danger'></i>
+        <a href={`product/category/${item.categoryId}`} className='text-decoration-none mx-2 text-#b8860b'>Xem thêm</a>
+        <i className='fa fa-angle-right text-#b8860b'></i>
       </div>
     </div>
     {/* category product list */}
@@ -37,7 +37,7 @@ export default function Category({item,getCart}) {
                         </a>
                     </div>
                     <div className='py-2 d-flex flex-column h-25 w-100'>
-                        <div className='text-danger fw-bold h-50'>{numeral(p.price).format('0,0')} ₫</div>
+                        <div className='text-#b8860b fw-bold h-50'>{numeral(p.price).format('0,0')} ₫</div>
                         <div type="button" className='fw-bold bg-secondary rounded-3 h-50 d-flex justify-content-center align-items-center' style={{fontSize:"14px"}} onClick={()=>handleAdd(p._id,p.price)}>Thêm vào giỏ hàng</div>
                     </div>
                 </div>

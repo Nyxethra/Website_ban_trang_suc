@@ -27,23 +27,33 @@ export default function Hightlight({getCart}) {
         }
       }
   return (
-    <div className='row row-cols-5 m-1'>
-        {data?.map(p=>(
-            <div className='p-2'>
-            <div className="border d-flex flex-column rounded-3 bg-white p-2 shadow-sm" style={{height:"400px"}}>
-                <div className='h-75 w-100' style={{borderBottom:"1px solid #ccc"}}>
-                    <a href={`product/productDetail/${p._id}`} className='w-100 h-100 d-flex flex-column text-decoration-none text-dark'>
-                        <img src={p.image} alt="" className='w-100 h-75 object-fit-cover' />
-                        <div className='h-25' style={{fontSize:"14px", fontWeight: "bold"}}>{p.name}</div>
-                    </a>
-                </div>
-                <div className='py-2 d-flex flex-column h-25 w-100'>
-                    <div className='text-danger fw-bold h-50'>{numeral(p.price).format('0,0')} ₫</div>
-                    <div type="button" className='fw-bold bg-secondary rounded-3 h-50 d-flex justify-content-center align-items-center hover-effect' style={{fontSize:"14px"}} onClick={()=>handleAdd(p?._id,p.price)}>Thêm vào giỏ hàng</div>
+    <div className='row g-4 mx-1'>
+        {data?.map(p => (
+            <div className='col' key={p._id}>
+                <div className="product-card border rounded-3 bg-white p-3 shadow-sm h-100">
+                    <div className='product-image-container mb-3'>
+                        <a href={`product/productDetail/${p._id}`} className='text-decoration-none'>
+                            <img src={p.image} alt={p.name} 
+                                 className='product-image w-100 h-100 object-fit-contain' />
+                        </a>
+                    </div>
+                    <div className='product-info'>
+                        <a href={`product/productDetail/${p._id}`} 
+                           className='text-decoration-none text-dark'>
+                            <h5 className='product-name mb-2'>{p.name}</h5>
+                        </a>
+                        <div className='product-price text-danger fw-bold mb-3'>
+                            {numeral(p.price).format('0,0')} ₫
+                        </div>
+                        <button 
+                            className='btn btn-warning w-100 fw-bold text-white'
+                            onClick={() => handleAdd(p?._id, p.price)}>
+                            Thêm vào giỏ hàng
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>       
-        )) }
+        ))}
     </div>
   )
 }

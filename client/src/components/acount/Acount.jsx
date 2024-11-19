@@ -123,7 +123,9 @@ export default function Acount() {
                     <div><input type="text" className='mb-2 bg-light ' name='phone' onChange={handleInput} disabled style={{border:"none",outline:"none"}}  value={values.phone ? values.phone : ""} ref={phone}/><i className='fa fa-pencil' style={{cursor:"pointer"}} onClick={handlePhone}></i></div>
                 </div>
             </div>
-            <button className='rounded-3 text-white text-center py-1' type='submit' style={{width:"100px",backgroundColor:"red",cursor:"pointer"}} onClick={handleUpdate}>Cập nhật</button>
+            <button className='rounded-3 text-white text-center py-1' type='submit' 
+              style={{width:"100px",backgroundColor:"#b8860b",cursor:"pointer"}} 
+              onClick={handleUpdate}>Cập nhật</button>
         </div>
     </div>
   )

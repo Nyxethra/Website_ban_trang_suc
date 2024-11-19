@@ -110,8 +110,8 @@ export default function Payment({data,total,getCart}) {
     <div className='w-100 my-2'>
       <div className='container'>
         <div className='w-100'>
-            <span className='d-flex text-dark'>Bạn có mã ưu đãi? <div type="button" className='text-danger'> Ấn vào đây để nhập mã</div></span>
-            <div className='border border-2 border-danger p-3 d-none'>
+            <span className='d-flex text-dark'>Bạn có m�� ưu đãi? <div type="button" className='text-#b8860b'> Ấn vào đây để nhập mã</div></span>
+            <div className='border border-2 border-#b8860b p-3 d-none'>
                 <span className='text-dark'>Nếu bạn có mã giảm giá, vui lòng điền vào phía bên dưới.</span>
                 <div className='w-100 d-flex mt-3'>
                     <input type="text" className='w-75' placeholder='Mã ưu đãi'/>
@@ -165,7 +165,7 @@ export default function Payment({data,total,getCart}) {
                     </div>
                 </div>
                 <div className="col-5 mt-2">
-                    <div className='border border-2 border-danger p-4'>
+                    <div className='border border-2 border-#b8860b p-4'>
                         <h5>ĐƠN HÀNG CỦA BẠN</h5>
                         <table className='table'>
                             <thead>
@@ -179,17 +179,17 @@ export default function Payment({data,total,getCart}) {
                                ? data?.data?.map((item,index)=>(
                                  <tr key={index} className=''>
                                     <th style={{fontWeight:"400"}}>{item?.product[0]?.name} x{item?.quantity}</th>
-                                    <th className='text-danger' style={{fontSize:"14px"}}>{numeral(item?.totalAmount).format('0,0')} đ</th>
+                                    <th className='text-#b8860b' style={{fontSize:"14px"}}>{numeral(item?.totalAmount).format('0,0')} đ</th>
                                  </tr>
                                ))
                                : <tr>
-                                  <th className='text-danger text-center'>Đơn hàng của bạn trống</th>
+                                  <th className='text-#b8860b text-center'>Đơn hàng của bạn trống</th>
                                </tr>
                     
                             }
                                <tr className='' style={{borderBottom:"2px solid gray"}}>
                                     <th className=''>TỔNG</th>
-                                    <th className='text-danger' style={{fontSize:"14px"}}>{numeral(total).format('0,0')} đ</th>
+                                    <th className='text-#b8860b' style={{fontSize:"14px"}}>{numeral(total).format('0,0')} đ</th>
                                  </tr>
                             </tbody>
                         </table>
@@ -203,7 +203,7 @@ export default function Payment({data,total,getCart}) {
                                 <span className='fw-bold mx-2'>Thanh toán bằng hình thức trực tuyến</span>
                             </div>
                             <button  type="button" className='btn btn-primary mb-3'disabled={!data?.data || data?.data?.length === 0} onClick={handleCheckout}>Đặt hàng</button>
-                            <div className=''>Thông tin cá nhân của bạn sẽ được sử dụng để xử lý đơn hàng, tăng trải nghiệm sử dụng website, và cho các mục đích cụ thể khác đã được mô tả trong <a href='#' style={{color:"red",textDecoration:"none"}}>chính sách riêng tư</a>.</div>
+                            <div className=''>Thông tin cá nhân của bạn sẽ được sử dụng để xử lý đơn hàng, tăng trải nghiệm sử dụng website, và cho các mục đích cụ thể khác đã được mô tả trong <a href='#' style={{color:"#b8860b",textDecoration:"none"}}>chính sách riêng tư</a>.</div>
                         </div>
                     </div>
                 </div>

@@ -37,11 +37,15 @@ export default function ListCart({item,getCart}) {
         <td className='text-center align-middle'>
           <img src={item?.product[0]?.image} alt="" className='w-50'/>
         </td>
-        <td className='text-danger' style={{fontSize:"14px"}}>{item?.product[0]?.name}</td>
+        <td className='text-#b8860b' style={{fontSize:"14px"}}>{item?.product[0]?.name}</td>
         <td>{numeral(item?.product[0]?.price).format('0,0')} ₫</td>
         <td className='text-center align-middle'><input type="number" min="1" className='w-50' onChange={(e) => setQuantity(e.target.value)} value={quantity}/></td>
         <td>{numeral(total).format('0,0')} ₫</td>
-        <td className='text-center align-middle'><i type="button" className='fa fa-trash fs-3 text-danger' onClick={()=>handleDelete(item.cartId)}/></td>
+        <td className='text-center align-middle'>
+          <i type="button" className='fa fa-trash fs-3' 
+            style={{color:"#b8860b"}} 
+            onClick={()=>handleDelete(item.cartId)}/>
+        </td>
     </tr>
   )
 }

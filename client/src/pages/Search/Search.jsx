@@ -83,7 +83,7 @@ export default function Search({getCart}) {
         <div className='row'>
             <div className="col-2 d-flex flex-column">
                 <div className='w-100 h-auto border border-1 bg-light p-1'>
-                    <div className='fw-bold' style={{color:"#ff8c00"}}>Danh mục sản phẩm</div>
+                    <div className='fw-bold' style={{color:"#b8860b"}}>Danh mục sản phẩm</div>
                     <ul className='list-unstyled mt-3' style={{fontSize:"14px"}}>
                         {category?.map(c=>(
                             <li key={c._id} className='py-1'><a href={`/product/category/${c?._id}`} className='text-decoration-none'><input type="radio" checked={categoryId === c._id}/> {c?.name}</a></li>
@@ -91,7 +91,7 @@ export default function Search({getCart}) {
                     </ul>
                 </div>
                 <div className='w-100 h-auto border border-1 bg-light p-1 my-2'>
-                    <div className='fw-bold' style={{color:"#ff8c00"}}>Lọc theo giá</div>
+                    <div className='fw-bold' style={{color:"#b8860b"}}>Lọc theo giá</div>
                     <ul className='list-unstyled mt-3' style={{fontSize:"12px"}}>
                         <li className='pb-3'><a href={`/product/search?q=${q}&max=3000000`} className='text-decoration-none'><input type="checkbox" checked={max == 3000000}/> Dưới 3,000,000 đ</a></li>
                         <li className='pb-3'><a href={`/product/search?q=${q}&min=3000000&max=5000000`} className='text-decoration-none'><input type="checkbox" checked={max == 5000000}/> 3,000,000 - 5,000,000 đ</a></li>
@@ -111,9 +111,9 @@ export default function Search({getCart}) {
                 </div>
                </div>
                 <div className='container my-2 d-flex justify-content-center align-items-center' style={{height:"50px"}}>
-                    <a href="" className='mx-2 border border-2 border-danger text-danger fw-bold fs-5  rounded-circle d-flex justify-content-center align-items-center text-decoration-none' style={{width:"40px",height:"40px"}}>1</a>
-                    <a href="" className='border border-2 border-danger text-danger fw-bold fs-5 rounded-circle d-flex justify-content-center align-items-center text-decoration-none' style={{width:"40px",height:"40px"}}>2</a>
-                    <a href="" className='mx-2 border border-2 border-danger text-danger fw-bold fs-5 rounded-circle d-flex justify-content-center align-items-center text-decoration-none' style={{width:"40px",height:"40px"}}><i className='fa fa-angle-right'></i></a>
+                    <a href="" className='mx-2 border border-2 border-#b8860b text-#b8860b fw-bold fs-5 rounded-circle d-flex justify-content-center align-items-center text-decoration-none' style={{width:"40px",height:"40px"}}>1</a>
+                    <a href="" className='border border-2 border-#b8860b text-#b8860b fw-bold fs-5 rounded-circle d-flex justify-content-center align-items-center text-decoration-none' style={{width:"40px",height:"40px"}}>2</a>
+                    <a href="" className='mx-2 border border-2 border-#b8860b text-#b8860b fw-bold fs-5 rounded-circle d-flex justify-content-center align-items-center text-decoration-none' style={{width:"40px",height:"40px"}}><i className='fa fa-angle-right'></i></a>
                 </div>
             </div>
         </div>

@@ -27,7 +27,7 @@ export default function Profile() {
         <div className='w-100 text-center fs-4'>Trang cá nhân</div>
         <div className='row mt-3'>
             <div className="col-3 border border-1 p-0">
-                <div className='p-2 d-flex' style={{backgroundColor:"red"}}>
+                <div className='p-2 d-flex' style={{backgroundColor:"#b8860b"}}>
                     <i className='fa fa-bars text-white fs-4'></i>
                     <span className='px-2 text-white fw-bold'>Quản lý tài khoản</span>
                 </div>

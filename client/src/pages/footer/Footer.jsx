@@ -7,7 +7,7 @@ export default function Footer() {
     <div className='mt-0 position-relative'style={{height:"250px",backgroundColor:"#2f2f2f", color:"#b0b0b0"}}>
       <div className='row mx-5'>
         <div className='col-5 my-4 d-flex flex-column'>
-          <h6 className='text-white'>NHANH JEWELRY FROM Nhom12_trua_t5.VN</h6>
+          <h6 className='text-white'> MARY JEWELRY FROM Nhom12_trua_t5.VN</h6>
           
           <ul className='my-4 list-unstyled'>
             <li className='text-white'>Địa chỉ: Cộng Hòa, phường 4, quận Tân Bình, thành phố Hồ Chí Minh, Việt Nam</li>
