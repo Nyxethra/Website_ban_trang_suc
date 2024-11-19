@@ -1,0 +1,100 @@
+.dashboard-container {
+  padding: 24px;
+  background-color: white;
+}
+
+.stats-row {
+  margin: 20px 0 30px;
+}
+
+.stats-row .ant-card {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  background: white;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 5px;
+}
+
+.stats-row .ant-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.charts-row {
+  margin-bottom: 30px;
+}
+
+.charts-row .ant-card {
+  height: 100%;
+  min-height: 450px;
+  border-radius: 12px;
+  background: white;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+.ant-statistic-title {
+  color: #666666;
+  font-size: 15px;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.ant-statistic-content {
+  color: #333333;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.ant-card-head-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333333;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.user-icon {
+  color: #1890ff;
+  font-size: 22px;
+  margin-right: 8px;
+}
+
+.order-icon {
+  color: #52c41a;
+  font-size: 22px;
+  margin-right: 8px;
+}
+
+.revenue-icon {
+  color: #faad14;
+  font-size: 22px;
+  margin-right: 8px;
+}
+
+.product-icon {
+  color: #eb2f96;
+  font-size: 22px;
+  margin-right: 8px;
+}
+
+.charts-row .ant-card .ant-card-body {
+  padding: 24px 0;
+}
+
+@media (max-width: 768px) {
+  .stats-row {
+    margin: 15px 0 25px;
+  }
+  
+  .ant-statistic-content {
+    font-size: 24px;
+  }
+  
+  .charts-row .ant-card {
+    min-height: 400px;
+  }
+} 

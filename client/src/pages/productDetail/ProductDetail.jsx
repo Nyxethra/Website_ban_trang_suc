@@ -142,228 +142,202 @@ export default function ProductDetail({getCart}) {
     useEffect(()=>{
         getComment()
     },[id])
-    const handleAdd=async(price)=>{
+    const [quantity, setQuantity] = useState(1)
+    const [activeTab, setActiveTab] = useState('description')
+
+    const handleAdd = async(price) => {
         try {
-          await axios.post("/cart/create",{
-            productId:id,
-            totalAmount:price
-          })
-          getCart()
-          alert("Add to cart success")
+            await axios.post("/cart/create", {
+                productId: id,
+                quantity: quantity,
+                totalAmount: price * quantity
+            })
+            getCart()
+            alert("Add to cart success")
         } catch (err) {
-          console.log(err)
+            console.log(err)
         }
-      }
+    }
+
+    const [relatedProducts, setRelatedProducts] = useState([]);
+
+    useEffect(() => {
+        const getRelatedProducts = async () => {
+            if (data?.categoryId) {
+                try {
+                    const res = await axios.get(`/product/category/${data.categoryId}`);
+                    const filtered = res.data
+                        .filter(product => product._id !== id)
+                        .slice(0, 5);
+                    setRelatedProducts(filtered);
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        };
+        getRelatedProducts();
+    }, [data, id]);
+
   return (
-    <div className='w-100'>
-      <div className='container' style={{height:"30px"}}>
-        <span style={{color:"#b8860b",textTransform:"uppercase"}}><a href="/" className='text-decoration-none' style={{color:"#b8860b"}}>Trang chủ</a>/ Chi tiết sản phẩm</span>
-      </div>
-      <div className='w-100'>
-        <div className='container'>
-            <div className="row gx-0">
-                <div className='col-10'>
-                    <div className='row gx-0'>
-                    <div className="col-6">
-                        <div className='border border-1 text-center 'style={{height:"350px"}}>
-                            <img src={mainImage ? mainImage : data?.image} alt="" className='w-100 h-100'/>
-                        </div>
-                    <div className='container bg-light my-2'>
-                        <div className='row row-cols-4 p-1'>
-                            {data?.sub_image.map(s=>(
-                            <div className='col border border-1' style={{height:"100px"}} onClick={()=>handleSubImageClick(s)}>
-                                <img src={s} alt="" className='w-100 h-100'/>
-                            </div>
-                            ))}
-                        </div>
-                    </div>
+    <div className='product-detail-page'>
+      <div className='container'>
+        <div className='breadcrumb mb-4'>
+          <a href="/" className='text-decoration-none'>Trang chủ</a>
+          <span className="mx-2">/</span>
+          <span>Chi tiết sản phẩm</span>
+        </div>
+
+        <div className='product-detail-container'>
+          <div className='row'>
+            {/* Gallery Section */}
+            <div className='col-md-6'>
+              <div className='product-gallery'>
+                <img 
+                  src={mainImage || data?.image} 
+                  alt={data?.name}
+                  className="product-detail-image"
+                />
+                <div className='product-thumbnails'>
+                  <img 
+                    src={data?.image}
+                    alt="Main"
+                    className={`product-thumbnail ${!mainImage ? 'active' : ''}`}
+                    onClick={() => setMainImage(data?.image)}
+                  />
+                  {data?.sub_image?.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      alt={`Thumbnail ${index + 1}`}
+                      className={`product-thumbnail ${mainImage === img ? 'active' : ''}`}
+                      onClick={() => setMainImage(img)}
+                    />
+                  ))}
                 </div>
-                <div className="col-6">
-                    <div className='container'>
-                        <div className='w-100'>
-                            <h4>{data?.name}</h4>
-                        </div>
-                        <div className='w-100 text-#b8860b'>
-                            <h5 className='fw-bold'>{numeral(data?.price).format('0,0')} ₫</h5>
-                        </div>
-                        <div className='w-100 bg-light p-2'>
-                            <h5>HỖ TRỢ KHÁCH HÀNG</h5>
-                            <p>Mọi thắc mắc vui lòng liên hệ Hotline/ Zalo: 0826.123.xxx hoặc thông qua www.facebook.com/nhóm12.vn để được giải đáp và hỗ trợ.</p>
-                        </div>
-                        <div className='w-100 bg-light p-2 mt-2'>
-                            <p  >Mẫu trang sức tôn lên sự dịu dàng, nhưng cũng không kém phần cá tính, nổi bật. Chúng tôi tin chắc rằng, nàng sẽ trông thật sự nổi bật và thu hút sự chú ý xung quanh.</p>
-                        </div>
-                        <div className='w-100 mt-2'>
-                            <h6>Size</h6>
-                            <div className='container row row-cols-6 gap-1'>
-                                {data?.size.map(z=>(
-                                <div className='col border border-2 w-auto p-1 rounded-3 bg-light' style={{height:"40px",cursor:"pointer"}}>
-                                    Size {z}
-                                </div>
-                                ))}
-                                
-                            </div>
-                        </div>
-                        <div className='mt-3 w-100'>
-                            <button className='fw-bold' style={{height:"40px",width:"40px",border:"none"}}>-</button>
-                            <input type="text" disabled placeholder='1' min={1} style={{width:"40px",height:"40px",fontWeight:"700",fontSize:"18px",padding:"10px",backgroundColor:"white"}}/>
-                            <button className='fw-bold' style={{height:"40px",width:"40px",border:"none"}}>+</button>
-                        </div>
-                        <div className='w-100 mt-2 d-flex'>
-                            <div type="button" onClick={()=>handleAdd(data.price)} className='text-uppercase text-decoration-none fw-bold text-white w-50 bg-info mt-3 rounded-3 d-flex justify-content-center align-items-center' style={{height:"40px"}}>Thêm vào giỏ hàng</div>
-                            <a href='/cart' className='text-uppercase text-decoration-none fw-bold text-white w-50 bg-warning mt-3 rounded-3 d-flex justify-content-center align-items-center mx-2' style={{height:"40px"}}>Mua ngay</a>
-                        </div>
-                    </div>
-                    </div>
+              </div>
+            </div>
+
+            {/* Product Info Section */}
+            <div className='col-md-6'>
+              <div className='product-info-container'>
+                <h1 className='product-title'>{data?.name}</h1>
+                <div className='product-price'>
+                  {numeral(data?.price).format('0,0')} ₫
                 </div>
-                <div className='mb-4' style={{marginRight:"20px"}}>
-                    <nav className='w-100 d-flex'>
-                        <div className='bg-light border-top border-4 border-#b8860b text-center' ref={tabHome} style={{width:"100px",height:"30px",cursor:"pointer"}} onClick={handleHomeTab}>Mô tả</div>
-                        <div className='bg-light text-center' ref={tabProfile} style={{width:"100px",height:"30px",cursor:"pointer"}} onClick={handleProfileTab}>Đánh giá({comments.count})</div>
-                    </nav>
-                    <div className='mt-0 w-100'>
-                        <div className='border border-1 d-block p-2' ref={homeTabRef} style={{minHeight:"50px"}}>
-                            <span className='p-2'>{data?.description}</span>
-                        </div>
-                        <div className='border border-1 p-4 d-none' ref={profileTabRef}>
-                            <h5 className='fw-bold'>Đánh giá ({comments?.average}/5)</h5>
-                            <div className='w-100 border border-2 border-#b8860b my-1 p-4'>
-                                <div className='d-flex'>
-                                    <p className='fw-bold'>Đánh giá của bạn:</p>
-                                    <select name="star" onChange={changeInput} id="" className='mx-4' style={{width:"70px",height:"30px"}}>
-                                        <option value="1" selected>1 sao</option>
-                                        <option value="2">2 sao</option>
-                                        <option value="3">3 sao</option>
-                                        <option value="4">4 sao</option>
-                                        <option value="5">5 sao</option>
-                                    </select>
-                                </div>
-                                <p className='fw-bold'>Nhận xét của bạn</p>
-                                <textarea className='w-100 px-2' name="description" onChange={changeInput} placeholder='Viết gì đó'></textarea>
-                                <div className='w-100 mb-4'>
-                                    <input type="file" id='image' accept="image/*" onChange={e=>setImage(e.target.files[0])} name='image' hidden/>
-                                    <input type="file" id='video' accept="video/*" onChange={e=>setVideo(e.target.files[0])} name='video' hidden/>
-                                    <label type="button" htmlFor="image" className='border border-2 border-#b8860b py-2 text-center' style={{fontSize:"12px",width:'100px',height:'40px'}}><i className='fa fa-photo text-#b8860b'></i>Thêm ảnh</label>
-                                    <label type="button" htmlFor="video" className="border border-2 border-#b8860b mx-2 py-2 text-center" style={{fontSize:"12px",width:'100px',height:'40px'}}><i className='fa fa-camera text-#b8860b'></i>Thêm video</label>
-                                    <div className='d-flex flex-wrap gap-2 mt-1 w-100 '>
-                                        {imageUrl && imageUrl.map(i=>(
-                                            <img src={i} alt="" style={{width:"70px",height:"70px"}}/>
-                                        ))}
-                                        {videoUrl && videoUrl.map((v)=>(
-                                            <video controls autoPlay style={{width:"70px",height:"70px"}}>
-                                             <source src={v} type="video/mp4" />
-                                           </video>
-                                        ))}
-                                    </div>  
-                                </div>
-                                <div className='border border-1 border-dark bg-light fs-5 d-flex justify-content-center align-items-center' onClick={handleClick} style={{width:"100px",height:"40px",cursor:"pointer"}}>Gửi đi</div>
-                                <div className='w-100 mt-3 border-top border-4 border-#b8860b'>
-                                     {comments?.data?.map((c,index)=>(
-                                    <div className='w-100 border-bottom border-1' key={index}>
-                                         <div className='d-flex mt-3 align-items-center' key={index}>
-                                            <div className="border rounded-circle" style={{width:"40px",height:"40px"}}>
-                                              <img src={c?.image} alt="" className='img-fluid rounded-circle'/> 
-                                            </div>
-                                            <div className='mx-2'>
-                                                <span style={{fontSize:"13px"}}>{c.name}</span>
-                                                <div className='rating text-warning' style={{fontSize:"10px"}}>
-                                                {[...Array(c.comment.star)].map((_, starIndex) => (
-                                                    <i className='fa fa-star' key={starIndex}></i>
-                                                    ))}
-                                                </div>
-                                                <p style={{fontSize:"10px"}}>{c?.comment.createdAt}</p>
-                                            </div>
-                                        </div>
-                                        <div className='w-100 mb-1 px-2'>
-                                            <span>{c.comment.description}</span>
-                                        </div>
-                                        <div className='w-100 d-flex flex-wrap mx-2 mb-1 gap-2'>
-                                            {c?.comment?.image?.map((i,index)=>(
-                                                <img src={i} alt="" key={index} style={{width:"70px",height:"70px",border:"1px solid gray"}}/>
-                                            ))}
-                                            {c?.comment?.video?.map((v,index)=>(
-                                                <video controls autoPlay width={70} height={70}>
-                                                 < source src={v} type="video/mp4" />
-                                                </video>
-                                            ))}
+                <div className='product-description'>
+                  {data?.description}
+                </div>
+
+                <div className='quantity-selector'>
+                  <button 
+                    className='quantity-btn'
+                    onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                  >-</button>
+                  <input 
+                    type="number"
+                    className='quantity-input'
+                    value={quantity}
+                    onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                    min="1"
+                  />
+                  <button 
+                    className='quantity-btn'
+                    onClick={() => setQuantity(prev => prev + 1)}
+                  >+</button>
+                </div>
+
+                <div className='action-buttons'>
+                  <button className='add-to-cart-btn' onClick={() => handleAdd(data?._id, data?.price)}>
+                    <i className='fa fa-shopping-cart me-2'></i>
+                    Thêm vào giỏ
+                  </button>
+                  <button className='buy-now-btn'>
+                    Mua ngay
+                  </button>
+                </div>
+
+                <div className='product-meta'>
+                  <div className='meta-item'>
+                    <span className='meta-label'>Mã sản phẩm:</span>
+                    <span>{data?.sku || 'N/A'}</span>
+                  </div>
+                  <div className='meta-item'>
+                    <span className='meta-label'>Danh mục:</span>
+                    <span>{data?.category?.name || 'N/A'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Tabs Section */}
+          <div className='product-tabs'>
+            <div className='tab-buttons'>
+              <button 
+                className={`tab-button ${activeTab === 'description' ? 'active' : ''}`}
+                onClick={() => setActiveTab('description')}
+              >
+                Mô tả sản phẩm
+              </button>
+              <button 
+                className={`tab-button ${activeTab === 'reviews' ? 'active' : ''}`}
+                onClick={() => setActiveTab('reviews')}
+              >
+                Đánh giá
+              </button>
+            </div>
+
+            <div className='tab-content'>
+              {activeTab === 'description' ? (
+                <div className='description-content'>
+                  {data?.description}
+                </div>
+              ) : (
+                <div className='reviews-content'>
+                  {/* Existing reviews content */}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Related Products Section */}
+        {relatedProducts.length > 0 && (
+            <div className='related-products mt-5'>
+                <div className='section-header d-flex justify-content-between align-items-center mb-4'>
+                    <h3 className='section-title m-0'>Sản phẩm tương tự</h3>
+                    <a href={`/product/category/${data?.categoryId}`} className='view-all-link'>
+                        Xem tất cả <i className='fa fa-angle-right ms-2'></i>
+                    </a>
+                </div>
+                
+                <div className='row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4'>
+                    {relatedProducts.map((product) => (
+                        <div className='col' key={product._id}>
+                            <div className="product-item">
+                                <a href={`/product/productDetail/${product._id}`} className='text-decoration-none'>
+                                    <div className='product-image-container'>
+                                        <img src={product.image} alt={product.name} className="product-image"/>
+                                    </div>
+                                    <div className='product-info'>
+                                        <h3 className='product-name'>{product.name}</h3>
+                                        <div className='product-price'>
+                                            {numeral(product.price).format('0,0')} ₫
                                         </div>
                                     </div>
-                                ))} 
-                                </div>
+                                </a>
+                                <button 
+                                    className='add-to-cart-btn'
+                                    onClick={() => handleAdd(product._id, product.price)}
+                                >
+                                    Thêm vào giỏ hàng
+                                </button>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div className='mb-4' style={{marginRight:"20px"}}>
-                    <div className='container bg-light border'>
-                        <div className='d-flex justify-content-between' style={{height:"50px"}}>
-                            <h3 className='text-dark'>Sản phẩm tương tự</h3>
-                            <div className='border border-1 rounded-3 my-1 d-flex align-items-center' style={{height:"35px"}}>
-                                <a href="" className='text-decoration-none mx-2 text-danger'>Xem thêm</a>
-                                <i className='fa fa-angle-right text-danger'></i>
-                            </div>
-                        </div>
-                        <div className='row row-cols-5 g-2'>
-                            <ListItem/>
-                            <ListItem/>
-                            <ListItem/>
-                            <ListItem/>
-                            <ListItem/>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
-            <div className="col-2 mb-0">
-                    <div className='w-100 border border-1'>
-                        <div className='w-100 text-center border-bottom' style={{height:"40px"}}>
-                            <h6>Bài viết mới cập nhật</h6>
-                        </div>
-                        <div className='mt-2 w-100 d-flex border-bottom'>
-                            <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
-                                <img src="/assets/paper/p1.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
-                            </div>
-                            <span style={{fontSize:"12px",color:"#b8860b"}}>Kim cương rời là gì? Có nên mua kim cương rời không?</span>
-                        </div>
-                        <div className='mt-2 w-100 d-flex border-bottom'>
-                            <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
-                                <img src="/assets/paper/p2.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
-                            </div>
-                            <span style={{fontSize:"12px",color:"#b8860b"}}>Ghi trọn khoảnh khắc trăm năm với những mẫu trang sức mới nhất</span>
-                        </div>
-                        <div className='mt-2 w-100 d-flex border-bottom'>
-                            <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
-                                <img src="/assets/paper/p3.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
-                            </div>
-                            <span style={{fontSize:"12px",color:"#b8860b"}}>Bí quyết phối áo len sành điệu cho thời trang dạo phố cuối năm</span>
-                        </div>
-                        <div className='mt-2 w-100 d-flex border-bottom'>
-                            <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
-                                <img src="/assets/paper/p4.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
-                            </div>
-                            <span style={{fontSize:"12px",color:"#b8860b"}}>PHÙ PHÉP KIM CƯƠNG ĐỂ MÓC TÚI NGƯỜI MUA</span>
-                        </div>
-                        <div className='mt-2 w-100 d-flex border-bottom'>
-                            <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
-                                <img src="/assets/paper/p5.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
-                            </div>
-                            <span style={{fontSize:"12px",color:"#b8860b"}}>VÀNG TRẮNG LÀ GÌ? GIÁ BAO NHIÊU? CÓ BỊ ĐEN HAY KHÔNG</span>
-                        </div>
-                        <div className='mt-2 w-100 d-flex border-bottom'>
-                            <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
-                                <img src="/assets/paper/p6.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
-                            </div>
-                            <span style={{fontSize:"12px",color:"#b8860b"}}>Hướng dẫn phân biệt kim cương thiên nhiên và kim cương nhân tạo</span>
-                        </div>
-                        <div className='mt-2 w-100 d-flex border-bottom'>
-                            <div className='mx-2 my-1' style={{height:"50px",width:"40%"}}>
-                                <img src="/assets/paper/p7.png" alt="" style={{width:"50px"}} className=' h-100 rounded-circle' />
-                            </div>
-                            <span style={{fontSize:"12px",color:"#b8860b"}}>Mặc áo dài truyền thống, những phụ kiện nào sẽ phù hợp nhất với nàng?</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        )}
       </div>
     </div>
   )

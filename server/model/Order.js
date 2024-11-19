@@ -5,7 +5,13 @@ const orderSchema=new mongoose.Schema({
         type:String
     },
     product:[
-        {productId:String,quantity:Number}
+        {
+            productId:{
+                type: String,
+                ref: 'product'
+            },
+            quantity:Number
+        }
     ],
     price:{
         type:Number
@@ -18,7 +24,7 @@ const orderSchema=new mongoose.Schema({
         type:String,
         default:"Thanh toán khi nhận hàng"
     }
-
 },
 {timestamps:true})
+
 module.exports=mongoose.model("order",orderSchema)

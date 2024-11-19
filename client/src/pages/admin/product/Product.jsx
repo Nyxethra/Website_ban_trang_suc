@@ -78,7 +78,14 @@ export default function Product() {
       :(<AddProduct/>)
       }
       </div>
-      {openUpdate&&<UpdateProduct openUpdate={setOpenUpdate} selectId={selectId} getAll={getData}/>}
+      {openUpdate && (
+        <UpdateProduct 
+          openUpdate={openUpdate}
+          setOpenUpdate={setOpenUpdate}
+          selectId={selectId}
+          getAll={getData}
+        />
+      )}
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import 'antd/dist/reset.css';
 
 import {BrowserRouter,Routes,Route,Navigate} from 'react-router-dom'
 

@@ -4,7 +4,7 @@ import { ref, uploadBytesResumable,getDownloadURL } from 'firebase/storage'
 import axios from '../../../axios'
 
 
-export default function UpdateProduct({openUpdate,selectId,getAll}) {
+export default function UpdateProduct({openUpdate, setOpenUpdate, selectId, getAll}) {
     const [image,setImage]=useState("")
     const [imageUrl,setImageUrl]=useState("")
     const [subImage,setSubImage]=useState("")
@@ -33,9 +33,9 @@ export default function UpdateProduct({openUpdate,selectId,getAll}) {
       try {
         const res=await axios.get(`/product/${selectId}`)
         setData(res.data)
-        setSize(res.data.size)
-        setImageUrl(res.data.image)
-        setSubImageUrl(res.data.sub_image)
+        setSize(res.data.size || [])
+        setImageUrl(res.data.image || "")
+        setSubImageUrl(res.data.sub_image || [])
         setInput({
             name:res.data.name,
             categoryId:res.data.categoryId,
@@ -118,82 +118,169 @@ export default function UpdateProduct({openUpdate,selectId,getAll}) {
   useEffect(()=>{
     {subImage && upload(subImage,"sub_image")}
   },[subImage])
-  const close=()=>{
-    openUpdate(false)
+  const close = () => {
+    setOpenUpdate(false);
   }
   console.log(input.categoryId)
+
+  const handleDeleteSubImage = (indexToDelete) => {
+    setSubImageUrl(prevImages => prevImages.filter((_, index) => index !== indexToDelete));
+  };
+
   return (
-        <div className=' w-100 h-75 position-relative' style={{top:'-450px',zIndex:1000,display: openUpdate?'block':'none'}}>
-            <div className='my-3 rounded-3 d-flex flex-column align-items-center'>
-                <div className='w-75 rounded-3 fw-bold text-white position-absolute fs-4 text-center py-2' style={{zIndex:"1",height:"60px",top:"-15px",background:"linear-gradient(60deg, #ab47bc, #8e24aa)",boxShadow:'0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(156,39,176,.4)'}}>
-                Update Product
-                </div>
-                <div className='w-100 h-100 bg-white rounded-3 pb-5' style={{minHeight:"300px",boxShadow:"0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12)"}}>
-                <div className='container border-bottom pb-4' style={{marginTop:"70px"}}>
-                    <div className='row row-cols-3'>
-                    <div className=''>
-                        <label htmlFor="name" className=''>Name</label>
-                        <input type="text" name="name" id="name" placeholder='Enter Name...' value={input.name} onChange={handleChange} className='border-0 border-bottom mx-2 ' style={{outline:"none"}}/>
-                    </div>
-                    <div className=''>
-                        <label htmlFor="category" className=''>Category</label>
-                        <select name="category"onChange={handleChange} className='border-0 border-bottom mx-2 ' style={{outline:"none"}}>
-                        <option disabled value>Select option</option>
-                            {category && category.map((c)=>(
-                                <option value={c._id} key={c._id}>{c.name}</option>
-                            ))
-                            }   
-                        </select>
-                    </div>
-                    <div className=''>
-                        <label htmlFor="price" className=''>Price</label>
-                        <input type="Number" value={input.price} name="price" id="price" onChange={handleChange} placeholder='Enter price...' className='border-0 border-bottom mx-2 ' style={{outline:"none"}}/>
-                    </div>
-                    </div>
-                    <div className='row row-cols-2 mt-3'>
-                    <div className=''>
-                        <label htmlFor="description" className=''>Description</label>
-                        <textarea name="description" value={input.description} id="description" onChange={handleChange} rows="2" placeholder='Writing...' className='w-100 px-2 border-0 border-bottom' style={{outline:"none"}}></textarea>
-                    </div>
-                    <div className=''>
-                        <label htmlFor="" className=''>Size</label>
-                        <input type="text" disabled placeholder='choose size' value={size} className='border-0 border-bottom mx-2 ' style={{outline:"none"}}/>
-                        <div className='mt-1 mx-5'>
-                        {[...Array(6)].map((_, index) => (
-                            <input type="button" key={index} name="size" id="size" value={index + 8} onClick={handleSize}/>
-                        ))}
-                        </div>
-                    </div>
-                    </div>
-                    <div className='row row-cols-2 mt-3'>
-                    <div className='d-flex flex-column'>
-                        <label htmlFor="">Image</label>
-                        <input type="file" name='image' id='image' onChange={e=>setImage(e.target.files[0])} hidden/>
-                        <label type="button" htmlFor="image" className='btn btn-secondary my-2' style={{width:"80px",height:"35px"}}>Upload</label>
-                        {imageUrl && 
-                        <div className='border border-3 border-light' style={{width:"100px", height:"100px"}}>
-                            <img src={imageUrl} alt="" style={{width:"100px", height:"100px"}}/>
-                        </div>
-                        }
-                    </div>
-                    <div className=''>
-                        <label htmlFor="">Sub_image</label>
-                        <input type="file" name='sub_image' id="sub_image" onChange={e=>setSubImage(e.target.files[0])} multiple  hidden/>
-                        <div className='d-flex gap-1 w-100 flex-wrap'>
-                        {subImageUrl && subImageUrl.map((i)=>(
-                            <div className='border border-3 border-light' style={{width:"100px", height:"100px"}}>
-                            <img src={i} alt="" style={{width:"100px", height:"100px"}}/>
-                            </div>
-                        ))}
-                        <label htmlFor="sub_image" type="button" className='border border-3 border-light d-flex justify-content-center align-items-center' style={{width:"100px", height:"100px",fontSize:"100px",color:"gray"}}>+</label>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <div type="button" className='w-25 rounded-3 fw-bold text-white fs-4 text-center py-2 mx-4 mt-3' style={{zIndex:"1",height:"60px",background:"linear-gradient(60deg, #ab47bc, #8e24aa)",boxShadow:'0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(156,39,176,.4)'}} onClick={handleUpdate}>Update</div>
-                </div>
+    <>
+      {openUpdate && (
+        <>
+          <div className="modal-overlay" onClick={close}></div>
+          <div className="update-product-modal">
+            <div className="modal-header">
+              <h5 className="modal-title">Cập nhật sản phẩm</h5>
+              <button className="modal-close-btn" onClick={close}>×</button>
             </div>
-            <div><i className='fa fa-close position-absolute p-4 fs-3' onClick={close} style={{top:0,right:0}}></i></div>
-        </div>
+            
+            <div className="modal-body">
+              <form onSubmit={handleUpdate}>
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <label className="form-label">Tên sản phẩm</label>
+                      <input
+                        type="text"
+                        name="name"
+                        className="form-control"
+                        value={input.name}
+                        onChange={handleChange}
+                        placeholder="Nhập tên sản phẩm..."
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <label className="form-label">Danh mục</label>
+                      <select 
+                        name="categoryId"
+                        className="form-control"
+                        value={input.categoryId}
+                        onChange={handleChange}
+                      >
+                        <option value="">Chọn danh mục</option>
+                        {category?.map(c => (
+                          <option key={c._id} value={c._id}>{c.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <label className="form-label">Giá</label>
+                      <input
+                        type="number"
+                        name="price"
+                        className="form-control"
+                        value={input.price}
+                        onChange={handleChange}
+                        placeholder="Nhập giá..."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col-12">
+                    <div className="form-group">
+                      <label className="form-label">Mô tả</label>
+                      <textarea
+                        name="description"
+                        className="form-control"
+                        rows="3"
+                        value={input.description}
+                        onChange={handleChange}
+                        placeholder="Nhập mô tả sản phẩm..."
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  <div className="col-12">
+                    <div className="form-group">
+                      <label className="form-label">Kích thước</label>
+                      <div className="size-buttons">
+                        {[...Array(6)].map((_, index) => (
+                          <button
+                            key={index}
+                            type="button"
+                            className={`size-button ${size.includes((index + 8).toString()) ? 'active' : ''}`}
+                            value={index + 8}
+                            onClick={handleSize}
+                          >
+                            {index + 8}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <label className="form-label">Hình ảnh chính</label>
+                      <input
+                        type="file"
+                        id="image"
+                        onChange={e => setImage(e.target.files[0])}
+                        hidden
+                      />
+                      <label htmlFor="image" className="image-preview">
+                        {imageUrl ? (
+                          <img src={imageUrl} alt="" className="img-fluid"/>
+                        ) : (
+                          <i className="fa fa-plus"></i>
+                        )}
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <label className="form-label">Hình ảnh phụ</label>
+                      <div className="d-flex gap-2 flex-wrap">
+                        {Array.isArray(subImageUrl) && subImageUrl.map((url, index) => (
+                          <div key={index} className="sub-image-container">
+                            <button 
+                              type="button"
+                              className="delete-image-btn"
+                              onClick={() => handleDeleteSubImage(index)}
+                            >
+                              ×
+                            </button>
+                            <div className="image-preview">
+                              <img src={url} alt="" className="img-fluid"/>
+                            </div>
+                          </div>
+                        ))}
+                        <input
+                          type="file"
+                          id="sub_image"
+                          onChange={e => setSubImage(e.target.files[0])}
+                          hidden
+                        />
+                        <label htmlFor="sub_image" className="image-preview">
+                          <i className="fa fa-plus"></i>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-end mt-4">
+                  <button type="submit" className="update-btn">
+                    <i className="fa fa-save me-2"></i>
+                    Cập nhật
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </>
+      )}
+    </>
   )
 }
