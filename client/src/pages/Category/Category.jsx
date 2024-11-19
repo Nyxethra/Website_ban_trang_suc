@@ -17,6 +17,7 @@ export default function Category({getCart}) {
     const [data,setData]=useState()
     const location=useLocation()
     const id=location.pathname.split("/")[3]
+    const [categoryName, setCategoryName] = useState("");
 
     useEffect(() => {
       const params = new URLSearchParams(window.location.search);
@@ -42,9 +43,9 @@ export default function Category({getCart}) {
   }, [id]);
     const getData=async()=>{
         try {
-            const res=await axios.get(`/product/category/${categoryId}?min=${min}&max=${max}&sort=${sort}&page=${page}&limit=${limit}`)
+            const res=await axios.get(`/product/category/${categoryId}?page=${page}&limit=${limit}&min=${min}&max=${max}&sort=${sort}`)
             setData(res.data)
-            setCount(res.data.length)
+            setCount(res.data.count)
           } catch (err) {
             console.log(err)
           }
@@ -57,12 +58,16 @@ export default function Category({getCart}) {
         try {
           const res=await axios.get('/category')
           setCategory(res.data)
+          const currentCategory = res.data.find(cat => cat._id === categoryId);
+          if (currentCategory) {
+            setCategoryName(currentCategory.name);
+          }
         } catch (err) {
           console.log(err)
         }
       }
       getCategory()
-    },[])
+    },[categoryId])
     useEffect(()=>{
       const getProduct=async()=>{
         try {
@@ -79,59 +84,145 @@ export default function Category({getCart}) {
     <div className='w-100 h-auto'>
       <div className='w-100 bg-light' style={{height:"40px"}}>
         <div className='container d-flex justify-content-between align-items-center p-2'>
-            <div className=''>
-                <span className='fs-5 '><a className="text-decoration-none mx-1 text-dark" href="/">Trang chủ</a></span>
+            <div className='breadcrumb mb-0'>
+                <span className='fs-6'>
+                    <a className="text-decoration-none" style={{color:"#b8860b"}} href="/">Trang chủ</a>
+                    <span className="mx-2" style={{color:"#b8860b"}}>/</span>
+                    <span style={{color:"#b8860b"}}>{categoryName}</span>
+                </span>
             </div>
             <div>
-                <span className='mx-1'>Hiển thị 1-{count} trong số {countAll} sản phẩm</span>
-                <select name="" id="" onChange={e=>setSort(e.target.value)}>
-                    <option value="">Tùy chọn</option>
-                    <option value="">Thứ tự theo mức độ phổ biến</option>
-                    <option value="asc">Thứ tự theo giá: thấp đến cao</option>
-                    <option value="desc">Thứ tự theo giá: cao xuống thấp</option>
-                    <option value="new">Mới nhất</option>
-                    <option value="">Theo bảng chữ cái A-Z</option>
-                    <option value="">Theo bảng chữ cái Z-A</option>
-                </select>
+                <span className='mx-1' style={{fontSize: '14px', color: '#666'}}>
+                    Hiển thị {(page-1)*limit + 1}-{Math.min(page*limit, countAll)} trong số {countAll} sản phẩm
+                </span>
             </div>
         </div>
       </div>
-      <div className='container my-2'>
-        <div className='row'>
-            <div className="col-2 d-flex flex-column">
-                <div className='w-100 h-auto border border-1 bg-light p-1'>
-                    <div className='fw-bold' style={{color:"#b8860b"}}>Danh mục sản phẩm</div>
-                    <ul className='list-unstyled mt-3' style={{fontSize:"14px"}}>
-                        {category?.map(c=>(
-                            <li key={c._id} className='py-1'><a href={`/product/category/${c?._id}`} className='text-decoration-none'><input type="radio" checked={categoryId === c._id}/> {c?.name}</a></li>
-                        ))}
-                    </ul>
-                </div>
-                <div className='w-100 h-auto border border-1 bg-light p-1 my-2'>
-                    <div className='fw-bold' style={{color:"#b8860b"}}>Lọc theo giá</div>
-                    <ul className='list-unstyled mt-3' style={{fontSize:"12px"}}>
-                        <li className='pb-3'><a href={`/product/category/${categoryId}?max=3000000`} className='text-decoration-none'><input type="checkbox" checked={max == 3000000}/> Dưới 3,000,000 đ</a></li>
-                        <li className='pb-3'><a href={`/product/category/${categoryId}?min=3000000&max=5000000`} className='text-decoration-none'><input type="checkbox" checked={max == 5000000}/> 3,000,000 - 5,000,000 đ</a></li>
-                        <li className='pb-3'><a href={`/product/category/${categoryId}?min=5000000&max=10000000`} className='text-decoration-none'><input type="checkbox" checked={max == 10000000}/> 5,000,000 - 10,000,000 đ</a></li>
-                        <li className='pb-3'><a href={`/product/category/${categoryId}?min=10000000&max=15000000`} className='text-decoration-none'><input type="checkbox" checked={max == 15000000}/> 10,000,000 - 15,000,000 đ</a></li>
-                        <li className='pb-3'><a href={`/product/category/${categoryId}?min=15000000&max=20000000`} className='text-decoration-none'><input type="checkbox" checked={max == 20000000}/> 15,000,000 - 20,000,000 đ</a></li>
-                        <li className='pb-3'><a href={`/product/category/${categoryId}?min=20000000`} className='text-decoration-none'><input type="checkbox" checked={min == 20000000}/> Trên 20,000,000 đ</a></li>
-                    </ul>
-                </div>
+      <div className='container'>
+        <div className="filter-container">
+          <div className="filter-group">
+            <label className="filter-label">Lọc theo giá:</label>
+            <select 
+              className="filter-select"
+              value={max}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "all") {
+                  setMin(0);
+                  setMax(100000000);
+                } else {
+                  const [minVal, maxVal] = value.split("-");
+                  setMin(Number(minVal));
+                  setMax(maxVal ? Number(maxVal) : 100000000);
+                }
+              }}
+            >
+              <option value="all">Tất cả giá</option>
+              <option value="0-3000000">Dưới 3,000,000 đ</option>
+              <option value="3000000-5000000">3,000,000 đ - 5,000,000 đ</option>
+              <option value="5000000-10000000">5,000,000 đ - 10,000,000 đ</option>
+              <option value="10000000-15000000">10,000,000 đ - 15,000,000 đ</option>
+              <option value="15000000-20000000">15,000,000 đ - 20,000,000 đ</option>
+              <option value="20000000">Trên 20,000,000 đ</option>
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label className="filter-label">Sắp xếp:</label>
+            <select 
+              className="filter-select"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+            >
+              <option value="">Tùy chọn</option>
+              <option value="popular">Thứ tự theo mức độ phổ biến</option>
+              <option value="asc">Thứ tự theo giá: thấp đến cao</option>
+              <option value="desc">Thứ tự theo giá: cao xuống thấp</option>
+              <option value="new">Mới nhất</option>
+              <option value="az">Theo bảng chữ cái A-Z</option>
+              <option value="za">Theo bảng chữ cái Z-A</option>
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label className="filter-label">Hiển thị:</label>
+            <select 
+              className="filter-select"
+              value={limit}
+              onChange={(e) => setLimit(Number(e.target.value))}
+            >
+              <option value="10">10 sản phẩm</option>
+              <option value="20">20 sản phẩm</option>
+              <option value="30">30 sản phẩm</option>
+              <option value="40">40 sản phẩm</option>
+            </select>
+          </div>
+        </div>
+
+        <div className='w-100' style={{boxSizing:"border-box"}}>
+          <div className='container p-0'>
+            <div className='row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4'>
+              <ListItem data={data} getCart={getCart}/>
             </div>
-            <div className="col-10 bg-light">
-            <div className='w-100' style={{boxSizing:"border-box"}}>
-              <div className='container'>
-                  <div className='row row-cols-5'>
-                    <ListItem data={data} getCart={getCart}/>
-                  </div>
-                </div>
-               </div>
-                <div className='container my-2 d-flex justify-content-center align-items-center' style={{height:"50px"}}>
-                        <a href={`/product/category/${categoryId}?min=${min}&max=${max}&page=${page-1}&limit=${limit}`} className={`border border-2 border-#b8860b text-#b8860b fw-bold fs-5 rounded-circle d-flex justify-content-center align-items-center text-decoration-none ${page>1 ? "" : "visually-hidden"}`} style={{width:"40px",height:"40px"}}><i className='fa fa-angle-left'></i></a>
-                        <a href={`/product/category/${categoryId}?min=${min}&max=${max}&page=${page+1}&limit=${limit}`} className={`mx-2 border border-2 border-#b8860b text-#b8860b fw-bold fs-5 rounded-circle d-flex justify-content-center align-items-center text-decoration-none ${page<limit ? "" : "visually-hidden"}`} style={{width:"40px",height:"40px"}}><i className='fa fa-angle-right'></i></a>
-                </div>
-            </div>
+          </div>
+        </div>
+
+        <div className="pagination-container">
+          <button 
+            onClick={() => setPage(1)}
+            disabled={page === 1}
+            className="pagination-button"
+            title="Trang đầu"
+          >
+            <i className="fa fa-angle-double-left"></i>
+          </button>
+          
+          <button 
+            onClick={() => setPage(prev => Math.max(1, prev - 1))}
+            disabled={page === 1}
+            className="pagination-button"
+            title="Trang trước"
+          >
+            <i className="fa fa-angle-left"></i>
+          </button>
+
+          {/* Hiển thị số trang */}
+          {Array.from({ length: Math.min(5, Math.ceil(countAll / limit)) }, (_, i) => {
+            const pageNumber = i + 1;
+            return (
+              <button
+                key={pageNumber}
+                onClick={() => setPage(pageNumber)}
+                className={`pagination-button ${page === pageNumber ? 'active' : ''}`}
+                style={page === pageNumber ? {
+                  backgroundColor: '#b8860b',
+                  color: 'white'
+                } : {}}
+              >
+                {pageNumber}
+              </button>
+            );
+          })}
+          
+          {Math.ceil(countAll / limit) > 5 && <span className="pagination-dots">...</span>}
+
+          <button 
+            onClick={() => setPage(prev => prev + 1)}
+            disabled={page * limit >= countAll}
+            className="pagination-button"
+            title="Trang sau"
+          >
+            <i className="fa fa-angle-right"></i>
+          </button>
+
+          <button 
+            onClick={() => setPage(Math.ceil(countAll / limit))}
+            disabled={page * limit >= countAll}
+            className="pagination-button"
+            title="Trang cuối"
+          >
+            <i className="fa fa-angle-double-right"></i>
+          </button>
         </div>
       </div>
     </div>

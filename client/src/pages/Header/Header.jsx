@@ -38,7 +38,13 @@ export default function Header({ count, total, data }) {
               <input 
                 type="text" 
                 placeholder='Bạn tìm gì...' 
-                onChange={e=>setSearchInput(e.target.value)} 
+                value={searchInput}
+                onChange={e => setSearchInput(e.target.value)}
+                onKeyPress={e => {
+                  if (e.key === 'Enter') {
+                    window.location.href = `/product/search?q=${searchInput}`;
+                  }
+                }}
                 className='search-input'
               />
               <a href={`/product/search?q=${searchInput}`} className='search-button'>
