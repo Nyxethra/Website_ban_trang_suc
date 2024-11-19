@@ -1,0 +1,16 @@
+[{
+  "_id": {
+    "$oid": "673c1f5cfd1336c05c64da55"
+  },
+  "name": "Nguyễn Quang",
+  "email": "gnauq1210@gmail.com",
+  "image": "https://lh3.googleusercontent.com/a/ACg8ocLO4jMRE05wH9L1XOekoXBA9WcbBv5rbo01XhzlGPTIQvtGBA=s96-c",
+  "admin": false,
+  "createdAt": {
+    "$date": "2024-11-19T05:17:16.582Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-19T06:14:04.939Z"
+  },
+  "__v": 0
+}]
