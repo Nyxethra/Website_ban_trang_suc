@@ -15,23 +15,68 @@ const Dashboard = () => {
   
   const [salesData, setSalesData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
+  const [todayOrders, setTodayOrders] = useState(0);
+  const [todayRevenue, setTodayRevenue] = useState(0);
+  const [topProduct, setTopProduct] = useState(null);
+  const [completionRate, setCompletionRate] = useState(0);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Lấy tổng số đơn hàng và doanh thu
+        // Lấy và tính toán các thống kê
         const ordersResponse = await axios.get('/order/all');
-        const orders = ordersResponse.data;
-        const totalOrders = orders.length;
-        const totalRevenue = orders
+        const ordersData = ordersResponse.data;
+        setOrders(ordersData);
+        
+        const totalOrders = ordersData.length;
+        const totalRevenue = ordersData
           .filter(order => order.paymentStatus === "Đã thanh toán")
           .reduce((sum, order) => sum + order.price, 0);
 
-        // Lấy tổng số sản phẩm
-        const productsResponse = await axios.get('/product');
-        const totalProducts = productsResponse.data.length;
+        // Tính toán đơn hàng và doanh thu hôm nay
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const todayOrdersData = ordersData.filter(order => {
+          const orderDate = new Date(order.createdAt);
+          return orderDate >= today;
+        });
+        
+        setTodayOrders(todayOrdersData.length);
+        setTodayRevenue(
+          todayOrdersData
+            .filter(order => order.paymentStatus === "Đã thanh toán")
+            .reduce((sum, order) => sum + order.price, 0)
+        );
 
-        // Lấy tổng số người dùng
+        // Tính tỷ lệ hoàn thành
+        const completedOrders = ordersData.filter(order => 
+          order.confimationStatus === "Đã xác nhận" || order.confimationStatus === "Hoàn thành"
+        ).length;
+        setCompletionRate(((completedOrders / totalOrders) * 100).toFixed(1));
+
+        const productsResponse = await axios.get('/product');
+        const products = productsResponse.data;
+        const totalProducts = products.length;
+
+        // Tìm sản phẩm bán chạy nhất
+        const productSales = {};
+        ordersData.forEach(order => {
+          order.product.forEach(item => {
+            if (item.productId) {
+              productSales[item.productId] = (productSales[item.productId] || 0) + item.quantity;
+            }
+          });
+        });
+        
+        if (Object.keys(productSales).length > 0) {
+          const topProductId = Object.entries(productSales)
+            .sort(([,a], [,b]) => b - a)[0][0];
+          const topProductData = products.find(p => p._id === topProductId);
+          setTopProduct(topProductData);
+        }
+
         const usersResponse = await axios.get('/user');
         const totalUsers = usersResponse.data.length;
 
@@ -42,51 +87,58 @@ const Dashboard = () => {
           totalProducts
         });
 
-        // Tính toán doanh số và số đơn hàng theo tháng
-        const monthlyData = new Array(12).fill(0).map(() => ({ revenue: 0, orders: 0 }));
-        orders
-          .filter(order => order.paymentStatus === "Đã thanh toán")
-          .forEach(order => {
-            const month = new Date(order.createdAt).getMonth();
-            monthlyData[month].revenue += order.price;
-            monthlyData[month].orders += 1;
-          });
+        // Tính toán dữ liệu biểu đồ doanh số theo tháng
+        const monthlyData = new Array(12).fill(0);
+        ordersData.forEach(order => {
+          const orderDate = new Date(order.createdAt);
+          const monthIndex = orderDate.getMonth();
+          monthlyData[monthIndex]++;
+        });
 
         setSalesData([
-          { month: 'T1', sales: monthlyData[0].revenue, orders: monthlyData[0].orders },
-          { month: 'T2', sales: monthlyData[1].revenue, orders: monthlyData[1].orders },
-          { month: 'T3', sales: monthlyData[2].revenue, orders: monthlyData[2].orders },
-          { month: 'T4', sales: monthlyData[3].revenue, orders: monthlyData[3].orders },
-          { month: 'T5', sales: monthlyData[4].revenue, orders: monthlyData[4].orders },
-          { month: 'T6', sales: monthlyData[5].revenue, orders: monthlyData[5].orders },
-          { month: 'T7', sales: monthlyData[6].revenue, orders: monthlyData[6].orders },
-          { month: 'T8', sales: monthlyData[7].revenue, orders: monthlyData[7].orders },
-          { month: 'T9', sales: monthlyData[8].revenue, orders: monthlyData[8].orders },
-          { month: 'T10', sales: monthlyData[9].revenue, orders: monthlyData[9].orders },
-          { month: 'T11', sales: monthlyData[10].revenue, orders: monthlyData[10].orders },
-          { month: 'T12', sales: monthlyData[11].revenue, orders: monthlyData[11].orders }
+          { month: 'T1', sales: monthlyData[0] },
+          { month: 'T2', sales: monthlyData[1] },
+          { month: 'T3', sales: monthlyData[2] },
+          { month: 'T4', sales: monthlyData[3] },
+          { month: 'T5', sales: monthlyData[4] },
+          { month: 'T6', sales: monthlyData[5] },
+          { month: 'T7', sales: monthlyData[6] },
+          { month: 'T8', sales: monthlyData[7] },
+          { month: 'T9', sales: monthlyData[8] },
+          { month: 'T10', sales: monthlyData[9] },
+          { month: 'T11', sales: monthlyData[10] },
+          { month: 'T12', sales: monthlyData[11] },
         ]);
 
-        // Phân loại sản phẩm theo danh mục
-        const products = productsResponse.data;
-        const categoriesResponse = await axios.get('/category');
-        const categoriesMap = {};
-        categoriesResponse.data.forEach(cat => {
-          categoriesMap[cat._id] = cat.name;
+        // Tính toán dữ liệu phân bố danh mục
+        const categoryStats = {};
+        const categoryResponse = await axios.get('/category');
+        const categories = categoryResponse.data;
+
+        // Khởi tạo tất cả danh mục với giá trị 0
+        categories.forEach(category => {
+          categoryStats[category._id] = 0;
         });
 
-        const categories = {};
+        // Đếm số lượng sản phẩm cho mỗi danh mục
         products.forEach(product => {
-          const categoryName = categoriesMap[product.categoryId] || 'Khác';
-          categories[categoryName] = (categories[categoryName] || 0) + 1;
+          if (product.categoryId) {
+            categoryStats[product.categoryId]++;
+          }
         });
 
-        const categoryDataArray = Object.entries(categories).map(([category, count]) => ({
-          category,
-          value: count
-        }));
+        // Chuyển đổi dữ liệu sang định dạng cho biểu đồ
+        const categoryChartData = categories
+          .map(category => ({
+            category: category.name,
+            value: categoryStats[category._id]
+          }))
+          .filter(item => item.value > 0); // Chỉ hiển thị các danh mục có sản phẩm
 
-        setCategoryData(categoryDataArray);
+        setCategoryData(categoryChartData);
+
+        // Sắp xếp ordersData theo ngày tạo giảm dần để hiển thị các đơn hàng gần đây nhất
+        ordersData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -102,17 +154,13 @@ const Dashboard = () => {
     yField: 'sales',
     smooth: true,
     point: {
-      size: 4,
+      size: 5,
       shape: 'diamond',
-      style: {
-        fill: '#1890ff',
-        stroke: '#fff',
-        lineWidth: 2,
-      }
     },
     color: '#1890ff',
     lineStyle: {
-      lineWidth: 2,
+      stroke: '#1890ff',
+      lineWidth: 3,
     },
     yAxis: {
       label: {
@@ -120,133 +168,63 @@ const Dashboard = () => {
           if (v >= 1000000) {
             return `${(v / 1000000).toFixed(1)}M`;
           }
-          return `${(v / 1000).toFixed(0)}K`;
-        },
-        style: {
-          fontSize: 12,
-          fontWeight: 500
-        }
-      },
-      title: {
-        text: 'Doanh thu (VNĐ)',
-        style: {
-          fontSize: 12,
-          fontWeight: 500
-        }
-      },
-      grid: {
-        line: {
-          style: {
-            stroke: '#f0f0f0',
-            lineWidth: 1,
-            lineDash: [4, 4],
+          if (v >= 1000) {
+            return `${(v / 1000).toFixed(1)}K`;
           }
-        }
-      }
+          return v;
+        },
+      },
     },
+    height: 300,
+    padding: [20, 40, 50, 40],
     xAxis: {
       label: {
         style: {
           fontSize: 12,
-          fontWeight: 500
-        }
-      }
-    },
-    tooltip: {
-      customContent: (title, items) => {
-        // Đảm bảo title là string và xử lý an toàn
-        const monthLabel = String(title).replace('T', 'Tháng ');
-        
-        return `
-          <div style="padding: 8px 12px;">
-            <div style="margin-bottom: 8px; font-weight: 500;">${monthLabel}</div>
-            ${items.map(item => {
-              const value = item?.data?.sales || 0;
-              const orders = item?.data?.orders || 0;
-              let formattedValue;
-              
-              if (value >= 1000000) {
-                formattedValue = `${(value / 1000000).toFixed(1)}M VNĐ`;
-              } else {
-                formattedValue = `${(value / 1000).toFixed(0)}K VNĐ`;
-              }
-
-              return `
-                <div style="margin-bottom: 4px;">
-                  <span>Doanh thu: ${formattedValue}</span>
-                </div>
-                <div>
-                  <span>Số đơn hàng: ${orders} đơn</span>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        `;
+        },
       },
-      showMarkers: true,
-      marker: {
-        fill: '#1890ff',
-      },
-      domStyles: {
-        'g2-tooltip': {
-          background: 'rgba(255, 255, 255, 0.95)',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-          borderRadius: '4px',
-          fontSize: '12px'
-        }
-      }
     },
-    animation: {
-      appear: {
-        animation: 'wave-in',
-        duration: 1000
-      }
-    }
+    yAxis: {
+      grid: {
+        line: {
+          style: {
+            stroke: '#E5E7EB',
+            lineWidth: 1,
+            lineDash: [4, 4],
+          },
+        },
+      },
+    },
   };
 
   const pieConfig = {
     data: categoryData,
     angleField: 'value',
     colorField: 'category',
-    radius: 0.75,
+    radius: 0.8,
     label: false,
     legend: {
-      position: 'bottom',
-      itemName: {
-        style: {
-          fontSize: 12,
-        }
-      }
+      position: 'right',
+      itemHeight: 16,
+      itemWidth: 100,
+      maxRow: 10,
     },
     color: ['#1890ff', '#52c41a', '#faad14', '#eb2f96'],
-    statistic: {
-      title: {
-        style: {
-          fontSize: '14px',
-          lineHeight: '1.5',
-          color: '#666',
-        },
-        formatter: () => 'Tổng'
-      },
-      content: {
-        style: {
-          fontSize: '24px',
-          lineHeight: '1.5',
-          color: '#333',
-        }
-      }
-    }
+    height: 300,
+    interactions: [{ type: 'element-active' }],
   };
 
   return (
-    <div style={{ padding: '0 24px' }}>
-      <Row gutter={[24, 24]} className="stats-row">
+    <div className="dashboard-container">
+      <h2 className="dashboard-title">Tổng quan</h2>
+      
+      <Row gutter={[16, 16]} className="stats-row">
         <Col xs={24} sm={12} lg={6}>
-          <Card>
+          <Card className="stat-card">
             <Statistic
-              title="Tổng người dùng"
+              title={<span className="stat-title">Tổng người dùng</span>}
               value={stats.totalUsers}
-              prefix={<UserOutlined className="user-icon" />}
+              prefix={<UserOutlined className="stat-icon user-icon" />}
             />
           </Card>
         </Col>
@@ -280,21 +258,77 @@ const Dashboard = () => {
         </Col>
       </Row>
 
-      <Row gutter={[24, 24]} className="charts-row">
-        <Col xs={24} lg={14}>
+      <Row gutter={[16, 16]} className="charts-row">
+        <Col xs={24} lg={15}>
           <Card 
-            title="Biểu đồ doanh số" 
-            headStyle={{ borderBottom: 'none' }}
+            title={<span className="chart-title">Biểu đồ doanh số</span>} 
+            className="chart-card"
+            bordered={false}
           >
             <Line {...lineConfig} />
           </Card>
         </Col>
-        <Col xs={24} lg={10}>
+        <Col xs={24} lg={9}>
           <Card 
-            title="Phân bố danh mục" 
-            headStyle={{ borderBottom: 'none' }}
+            title={<span className="chart-title">Phân bố danh mục</span>} 
+            className="chart-card"
+            bordered={false}
           >
             <Pie {...pieConfig} />
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]} className="details-row">
+        <Col xs={24} lg={14}>
+          <Card 
+            title={<span className="chart-title">Đơn hàng gần đây</span>} 
+            className="detail-card"
+            bordered={false}
+          >
+            <div className="recent-orders">
+              {/* Hiển thị 5 đơn hàng gần nhất */}
+              {orders?.slice(0, 5).map((order, index) => (
+                <div key={index} className="order-item">
+                  <div className="order-info">
+                    <span className="order-id">#{order._id.slice(-6)}</span>
+                    <span className="order-date">
+                      {new Date(order.createdAt).toLocaleDateString('vi-VN')}
+                    </span>
+                  </div>
+                  <div className="order-amount">
+                    {order.price.toLocaleString()} VNĐ
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </Col>
+        
+        <Col xs={24} lg={10}>
+          <Card 
+            title={<span className="chart-title">Thống kê nhanh</span>} 
+            className="detail-card"
+            bordered={false}
+          >
+            <div className="quick-stats">
+              <div className="stat-item">
+                <span className="stat-label">Đơn hàng hôm nay</span>
+                <span className="stat-value">{todayOrders}</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Doanh thu hôm nay</span>
+                <span className="stat-value">{todayRevenue.toLocaleString()} VNĐ</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Sản phẩm bán chạy nhất</span>
+                <span className="stat-value">{topProduct?.name || 'N/A'}</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Tỷ lệ hoàn thành</span>
+                <span className="stat-value">{completionRate}%</span>
+              </div>
+            </div>
           </Card>
         </Col>
       </Row>
