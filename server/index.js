@@ -1,60 +1,59 @@
-const fastify=require('fastify')({logger:true})
-const path=require('path')
-const connect=require('./config/db')
-const fs= require('fs')
-require('dotenv').config()
-const fastifySession=require('@fastify/secure-session')
-require('./controller/passport')
+const fastify = require('fastify')({ logger: true });
+const mongoose = require('mongoose');
+const cookie = require('@fastify/cookie');
+const session = require('@fastify/session');
+const cors = require('@fastify/cors');
+const adminRoutes = require('./routes/admin');
 
-fastify.register(require('@fastify/formbody'))
-fastify.register(require('fastify-multer').contentParser);
-fastify.register(require('./router/user'))
-fastify.register(require('./router/product'))
-fastify.register(require('./router/category'))
-fastify.register(require('./router/cart'))
-fastify.register(require('./router/payment'))
-
-fastify.register(require('./router/comment'))
-fastify.register(require('./router/order'))
-
-
-fastify.register(require('@fastify/cookie'))
-
-
-fastify.register(require('@fastify/static'), {
-    root: path.join(__dirname, 'public/upload/'),
-    prefix:'/upload'
-  })
-fastify.register(require('@fastify/cors'), {
-    origin: 'http://localhost:3000',
-    credentials: true,
-    methods: "GET, POST, PUT, DELETE",
-    preflightContinue: true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-
-fastify.register(fastifySession,{
-  key:fs.readFileSync(path.join(__dirname,'not-so-secret-key')),
-  cookie:{
-    path:'/'
-  },
-  cookieName:'accessCookie'
+// Kết nối MongoDB
+mongoose.connect('mongodb://localhost:27017/shop')
+.then(() => {
+    console.log('MongoDB connected successfully');
 })
-const fastifyPassport=require('@fastify/passport')
-fastify.register(fastifyPassport.initialize())
-fastify.register(fastifyPassport.secureSession())
-//
+.catch(err => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
+});
 
-
-
-const start=async()=>{
+const start = async () => {
     try {
-        await fastify.listen(5000)
-        console.log('Server is running on port 5000')
+        // Đăng ký CORS
+        fastify.register(cors, {
+            origin: 'http://localhost:3000',
+            credentials: true
+        });
+
+        // Đăng ký cookie
+        fastify.register(cookie);
+
+        // Đợi cookie được đăng ký hoàn tất
+        await fastify.after();
+        
+        // Đăng ký session
+        fastify.register(session, {
+            cookieName: 'sessionId',
+            secret: 'this-is-a-very-long-secret-key-that-is-at-least-32-characters',
+            cookie: {
+                secure: process.env.NODE_ENV === 'production',
+                httpOnly: true,
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            },
+            saveUninitialized: false
+        });
+
+        // Đăng ký routes admin
+        fastify.register(adminRoutes, { prefix: '/admin' });
+
+        // Khởi động server
+        await fastify.listen({ 
+            port: 5000,
+            host: '0.0.0.0'
+        });
+        console.log(`Server is running on port 5000`);
     } catch (err) {
-        console.log(err)
-        process.exit(1)
+        fastify.log.error(err);
+        process.exit(1);
     }
-}
-connect()
-start()
+};
+
+start();
