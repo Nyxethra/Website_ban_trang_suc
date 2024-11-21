@@ -10,9 +10,6 @@ async function productRouter(fastify,_,done){
     fastify.get('/product',productController.findProduct)
     fastify.get('/product/productByAllCategory',productController.ProductByCategory)
     fastify.delete('/product/delete/:id',productController.delete)
-
-
-
     done()
 }
 
