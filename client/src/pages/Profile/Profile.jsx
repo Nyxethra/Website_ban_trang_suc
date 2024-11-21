@@ -8,7 +8,6 @@ import './profile.css'
 import axios from '../../axios'
 import Order from '../../components/order/Order'
 
-
 export default function Profile() {
     const {currentUser}=useSelector(state=>state.user)
     const dispatch=useDispatch()
