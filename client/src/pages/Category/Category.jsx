@@ -3,7 +3,6 @@ import axios from '../../axios'
 import {Route, Routes, useLocation} from 'react-router-dom'
 import ListItem from '../../components/listItem/ListItem'
 
-
 export default function Category({getCart}) {
     const [category,setCategory]=useState()
     const [count,setCount]=useState(0)

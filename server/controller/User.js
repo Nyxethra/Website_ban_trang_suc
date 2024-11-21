@@ -2,7 +2,6 @@ const User=require('../model/User')
 const bcrypt=require('bcrypt')
 const path=require('path')
 
-
 exports.updateUser=async(req,reply)=>{
     try {
         if(req.body.password){

@@ -2,7 +2,6 @@ const User=require('../model/User')
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 
-
 exports.register=async(req,reply)=>{
     try {
         const user=await User.findOne({email:req.body.email})

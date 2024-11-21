@@ -6,8 +6,6 @@ const CLIENT_URL="http://localhost:3000"
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 
-
-
 async function userRouter(fastify,_,done){
     fastify.post('/user/register',authController.register)
     fastify.post('/user/signin',authController.signin)

@@ -9,8 +9,6 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import CircularProgress from '@mui/material/CircularProgress';
 import { addToCart } from '../../utils/cartUtils';
 
-
-
 export default function ProductDetail({getCart}) {
     const {currentUser}=useSelector(state=>state.user)
     const tabHome=useRef()
