@@ -3,7 +3,6 @@ import axios from '../../axios'
 import {Route, Routes, useLocation, useNavigate} from 'react-router-dom'
 import ListItem from '../../components/listItem/ListItem'
 
-
 export default function Search({getCart}) {
   const [data, setData] = useState([])
   const [count, setCount] = useState(0)
