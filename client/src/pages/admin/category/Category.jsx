@@ -50,6 +50,7 @@ export default function Category() {
   }, [])
 
   return (
+    
     <div className='container mt-3'>
       <div type="button" className='btn btn-primary' onClick={handleAdd}>Add Category</div>
       <div className='mt-2 w-50 border border-3 d-flex flex-column bg-white p-2 d-none' ref={AddModal} style={{ height: "100px", boxShadow: '0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(156,39,176,.4)' }}>
