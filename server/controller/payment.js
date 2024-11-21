@@ -3,7 +3,6 @@ const request = require('request');
 const moment = require('moment');
 const Order =require('../model/Order')
 
-
 exports.create_payment_url=(req, reply) =>{
     
     process.env.TZ = 'Asia/Ho_Chi_Minh';
