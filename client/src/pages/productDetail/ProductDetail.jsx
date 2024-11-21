@@ -8,8 +8,6 @@ import {imgDb} from '../../firebase'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import CircularProgress from '@mui/material/CircularProgress';
 
-
-
 export default function ProductDetail({getCart}) {
     const {currentUser}=useSelector(state=>state.user)
     const tabHome=useRef()
