@@ -1,7 +1,6 @@
 import Login from '../../components/login/Login'
 import Register from '../../components/register/Register'
 
-
 import React, { useState } from 'react'
 
 export default function SignIn() {
