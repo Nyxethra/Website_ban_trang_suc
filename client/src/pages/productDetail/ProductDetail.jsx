@@ -7,6 +7,7 @@ import {useSelector} from 'react-redux'
 import {imgDb} from '../../firebase'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import CircularProgress from '@mui/material/CircularProgress';
+import { addToCart } from '../../utils/cartUtils';
 
 
 
@@ -145,17 +146,11 @@ export default function ProductDetail({getCart}) {
     const [quantity, setQuantity] = useState(1)
     const [activeTab, setActiveTab] = useState('description')
 
-    const handleAdd = async(price) => {
-        try {
-            await axios.post("/cart/create", {
-                productId: id,
-                quantity: quantity,
-                totalAmount: price * quantity
-            })
-            getCart()
-            alert("Add to cart success")
-        } catch (err) {
-            console.log(err)
+    const handleAdd = async() => {
+        const success = await addToCart(id, data?.price, quantity);
+        if (success) {
+            getCart();
+            alert("Add to cart success");
         }
     }
 
@@ -177,6 +172,14 @@ export default function ProductDetail({getCart}) {
         };
         getRelatedProducts();
     }, [data, id]);
+
+    const handleRelatedAdd = async(productId, price) => {
+        const success = await addToCart(productId, price, 1);
+        if (success) {
+            getCart();
+            alert("Add to cart success");
+        }
+    }
 
   return (
     <div className='product-detail-page'>
@@ -247,7 +250,7 @@ export default function ProductDetail({getCart}) {
                 </div>
 
                 <div className='action-buttons'>
-                  <button className='add-to-cart-btn' onClick={() => handleAdd(data?._id, data?.price)}>
+                  <button className='add-to-cart-btn' onClick={handleAdd}>
                     <i className='fa fa-shopping-cart me-2'></i>
                     Thêm vào giỏ
                   </button>
@@ -328,7 +331,7 @@ export default function ProductDetail({getCart}) {
                                 </a>
                                 <button 
                                     className='add-to-cart-btn'
-                                    onClick={() => handleAdd(product._id, product.price)}
+                                    onClick={() => handleRelatedAdd(product._id, product.price)}
                                 >
                                     Thêm vào giỏ hàng
                                 </button>
