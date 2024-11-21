@@ -6,7 +6,6 @@ import Banner from '../../components/banner/Banner'
 import SideBar from '../../components/sidebar/SideBar'
 import axios from '../../axios'
 
-
 export default function Content({getCart}) {
 
   const [data,setData]=useState()
