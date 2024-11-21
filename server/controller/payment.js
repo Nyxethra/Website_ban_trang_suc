@@ -14,7 +14,6 @@ exports.create_payment_url=(req, reply) =>{
         req.socket.remoteAddress ||
         req.connection.socket.remoteAddress;
 
-
     let config = require('config');
     
     let tmnCode = config.get('vnp_TmnCode');
@@ -145,9 +144,6 @@ exports.vnpay_ipn=async(req, reply)=> {
         reply.code(200).send({RspCode: '97', Message: 'Checksum failed'})
     }
 };
-
-
-
 
 function sortObject(obj) {
     if (typeof obj !== 'object' || obj === null) {
