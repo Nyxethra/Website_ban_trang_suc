@@ -253,7 +253,9 @@ export default function ProductDetail({getCart}) {
                     Thêm vào giỏ
                   </button>
                   <button className='buy-now-btn'>
+                  <a href='/cart/checkout' className='text-decoration-none text-white'>
                     Mua ngay
+                  </a>
                   </button>
                 </div>
 
