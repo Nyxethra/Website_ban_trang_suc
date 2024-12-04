@@ -137,22 +137,56 @@ export default function Search({getCart}) {
 
       <div className='container'> {/* Container cho nội dung chính */}
           <div className="filter-container my-3"> {/* Container cho các bộ lọc */}
+              {/* Phần lọc sắp xếp sản phẩm */}
+              <div className="filter-group">
+                  <label className="filter-label">Sắp xếp:</label>
+                  <select 
+                      className="filter-select"
+                      value={sort} // Giá trị hiện tại của state sort
+                      onChange={(e) => setSort(e.target.value)} // Cập nhật state sort khi người dùng chọn option mới
+                  >
+                      {/* Các tùy chọn sắp xếp:
+                          - "": Không sắp xếp (mặc định)
+                          - popular: Sắp xếp theo độ phổ biến
+                          - asc: Sắp xếp giá tăng dần
+                          - desc: Sắp xếp giá giảm dần
+                          - new: Sắp xếp theo thời gian tạo mới nhất
+                      */}
+                      <option value="">Tùy chọn</option>
+                      <option value="popular">Thứ tự theo mức độ phổ biến</option>
+                      <option value="asc">Thứ tự theo giá: thấp đến cao</option>
+                      <option value="desc">Thứ tự theo giá: cao xuống thấp</option>
+                      <option value="new">Mới nhất</option>
+                  </select>
+              </div>
+
+              {/* Phần lọc theo khoảng giá */}
               <div className="filter-group">
                   <label className="filter-label">Lọc theo giá:</label>
                   <select 
                       className="filter-select"
-                      onChange={(e) => { // Xử lý sự kiện khi chọn lọc giá
+                      onChange={(e) => { 
                           const value = e.target.value;
+                          // Nếu chọn "Tất cả giá", set khoảng giá từ 0 đến 100 triệu
                           if (value === "all") {
                               setMin(0);
                               setMax(100000000);
                           } else {
+                              // Tách giá trị min-max từ value của option được chọn
                               const [minVal, maxVal] = value.split("-");
+                              // Cập nhật state min với giá trị tối thiểu
                               setMin(Number(minVal));
+                              // Nếu không có maxVal (trường hợp "Trên 20 triệu"), 
+                              // set max là 100 triệu, ngược lại lấy giá trị maxVal
                               setMax(maxVal ? Number(maxVal) : 100000000);
                           }
                       }}
                   >
+                      {/* Các tùy chọn khoảng giá:
+                          - all: Hiển thị tất cả mức giá
+                          - Các khoảng giá được định nghĩa sẵn từ dưới 3 triệu đến trên 20 triệu
+                          Value của mỗi option là chuỗi chứa giá min và max, phân cách bởi dấu "-"
+                      */}
                       <option value="all">Tất cả giá</option>
                       <option value="0-3000000">Dưới 3,000,000 đ</option>
                       <option value="3000000-5000000">3,000,000 đ - 5,000,000 đ</option>
@@ -160,21 +194,6 @@ export default function Search({getCart}) {
                       <option value="10000000-15000000">10,000,000 đ - 15,000,000 đ</option>
                       <option value="15000000-20000000">15,000,000 đ - 20,000,000 đ</option>
                       <option value="20000000">Trên 20,000,000 đ</option>
-                  </select>
-              </div>
-
-              <div className="filter-group">
-                  <label className="filter-label">Sắp xếp:</label>
-                  <select 
-                      className="filter-select"
-                      value={sort}
-                      onChange={(e) => setSort(e.target.value)} // Cập nhật state sort khi chọn phương thức sắp xếp
-                  >
-                      <option value="">Tùy chọn</option>
-                      <option value="popular">Thứ tự theo mức độ phổ biến</option>
-                      <option value="asc">Thứ tự theo giá: thấp đến cao</option>
-                      <option value="desc">Thứ tự theo giá: cao xuống thấp</option>
-                      <option value="new">Mới nhất</option>
                   </select>
               </div>
 
@@ -197,18 +216,40 @@ export default function Search({getCart}) {
           </div>
 
           {filteredData && filteredData.length > 0 ? ( // Kiểm tra nếu có dữ liệu sau khi lọc
+              // Container chính cho danh sách sản phẩm
               <div className='w-100' style={{boxSizing:"border-box"}}>
+                  {/* Container Bootstrap với padding 0 */}
                   <div className='container p-0'>
-                      <div className='row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4'> {/* Lưới sản phẩm */}
-                          <ListItem data={filteredData} getCart={getCart}/> {/* Hiển thị danh sách sản phẩm */}
+                      {/* 
+                          Grid system của Bootstrap:
+                          - row-cols-1: 1 cột trên màn hình nhỏ
+                          - row-cols-md-2: 2 cột trên màn hình medium
+                          - row-cols-lg-3: 3 cột trên màn hình large
+                          - row-cols-xl-4: 4 cột trên màn hình extra large
+                          - g-4: gap (khoảng cách) giữa các items là 4 (1.5rem)
+                      */}
+                      <div className='row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4'>
+                          {/* Component ListItem nhận props:
+                              - data: danh sách sản phẩm đã được lọc
+                              - getCart: function để cập nhật giỏ hàng
+                          */}
+                          <ListItem data={filteredData} getCart={getCart}/>
                       </div>
                   </div>
               </div>
           ) : (
-              <div className="no-results-container text-center py-5"> {/* Hiển thị thông báo khi không có kết quả */}
+              // Hiển thị khi không tìm thấy sản phẩm nào
+              <div className="no-results-container text-center py-5">
+                  {/* Icon tìm kiếm với màu vàng nâu (#b8860b) */}
                   <i className="fa fa-search no-results-icon mb-3" style={{fontSize: '48px', color: '#b8860b'}}></i>
+                  
+                  {/* Thông báo không tìm thấy kết quả */}
                   <h4>Không tìm thấy kết quả nào</h4>
+                  
+                  {/* Hiển thị từ khóa tìm kiếm của người dùng */}
                   <p className="text-muted">Không tìm thấy sản phẩm nào phù hợp với từ khóa "{q}"</p>
+                  
+                  {/* Phần gợi ý cho người dùng */}
                   <div className="suggestions">
                       <p>Bạn có thể thử:</p>
                       <ul>
@@ -217,7 +258,9 @@ export default function Search({getCart}) {
                           <li>Sử dụng từ khóa ngắn gọn hơn</li>
                       </ul>
                   </div>
-                  <a href="/" className="btn btn-custom mt-3">Quay lại trang chủ</a> {/* Nút quay lại trang chủ */}
+                  
+                  {/* Nút quay về trang chủ với class btn-custom tùy chỉnh */}
+                  <a href="/" className="btn btn-custom mt-3">Quay lại trang chủ</a>
               </div>
           )}
 
@@ -229,7 +272,7 @@ export default function Search({getCart}) {
                       className="pagination-button"
                       title="Trang đầu"
                   >
-                      <i className="fa fa-angle-double-left"></i>
+                      <i className="fa fa-angle-double-left"></i> {/* Icon cho trang đầu */}
                   </button>
 
                   <button 
@@ -238,34 +281,34 @@ export default function Search({getCart}) {
                       className="pagination-button"
                       title="Trang trước"
                   >
-                      <i className="fa fa-angle-left"></i>
+                      <i className="fa fa-angle-left"></i> {/* Icon cho trang trước */}
                   </button>
 
-                  {Array.from({ length: Math.ceil(count / limit) }, (_, i) => i + 1)
+                  {Array.from({ length: Math.ceil(count / limit) }, (_, i) => i + 1) // Tạo mảng số trang
                       .filter(pageNum => { // Lọc các số trang để hiển thị
-                          if (pageNum === 1 || pageNum === Math.ceil(count / limit)) return true;
-                          return Math.abs(pageNum - page) <= 2;
+                          if (pageNum === 1 || pageNum === Math.ceil(count / limit)) return true; // Luôn hiển thị trang đầu và cuối
+                          return Math.abs(pageNum - page) <= 2; // Hiển thị các trang gần trang hiện tại
                       })
                       .map((pageNum, index, array) => { // Tạo các nút trang
                           if (index > 0 && array[index - 1] !== pageNum - 1) { // Kiểm tra để thêm dấu "..."
                               return [
-                                  <span key={`ellipsis-${pageNum}`} className="pagination-ellipsis">...</span>,
+                                  <span key={`ellipsis-${pageNum}`} className="pagination-ellipsis">...</span>, // Dấu "..."
                                   <button
                                       key={pageNum}
-                                      onClick={() => setPage(pageNum)}
-                                      className={`pagination-button ${page === pageNum ? 'active' : ''}`}
+                                      onClick={() => setPage(pageNum)} // Chuyển đến trang được chọn
+                                      className={`pagination-button ${page === pageNum ? 'active' : ''}`} // Đánh dấu trang hiện tại
                                   >
-                                      {pageNum}
+                                      {pageNum} {/* Số trang */}
                                   </button>
                               ];
                           }
                           return (
                               <button
                                   key={pageNum}
-                                  onClick={() => setPage(pageNum)}
-                                  className={`pagination-button ${page === pageNum ? 'active' : ''}`}
+                                  onClick={() => setPage(pageNum)} // Chuyển đến trang được chọn
+                                  className={`pagination-button ${page === pageNum ? 'active' : ''}`} // Đánh dấu trang hiện tại
                               >
-                                  {pageNum}
+                                  {pageNum} {/* Số trang */}
                               </button>
                           );
                       })}
@@ -276,7 +319,7 @@ export default function Search({getCart}) {
                       className="pagination-button"
                       title="Trang sau"
                   >
-                      <i className="fa fa-angle-right"></i>
+                      <i className="fa fa-angle-right"></i> {/* Icon cho trang sau */}
                   </button>
 
                   <button 
@@ -285,7 +328,7 @@ export default function Search({getCart}) {
                       className="pagination-button"
                       title="Trang cuối"
                   >
-                      <i className="fa fa-angle-double-right"></i>
+                      <i className="fa fa-angle-double-right"></i> {/* Icon cho trang cuối */}
                   </button>
               </div>
           )}
