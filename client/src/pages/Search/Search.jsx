@@ -59,7 +59,7 @@ export default function Search({getCart}) {
         if (sort) {
             switch(sort) {
                 case 'popular':
-                    // Thêm logic sắp xếp theo độ phổ biến nếu có
+                    // Thêm logic sắp xếp theo độ phổ biến 
                     break;
                 case 'asc':
                     filtered.sort((a, b) => a.price - b.price);
@@ -170,7 +170,10 @@ export default function Search({getCart}) {
                   <select 
                       className="filter-select"
                       value={limit}
-                      onChange={(e) => setLimit(Number(e.target.value))}
+                      onChange={(e) => {
+                          setLimit(Number(e.target.value));
+                          setPage(1);
+                      }}
                   >
                       <option value="10">Hiển thị 10 sản phẩm</option>
                       <option value="20">Hiển thị 20 sản phẩm</option>
@@ -214,6 +217,62 @@ export default function Search({getCart}) {
                       title="Trang đầu"
                   >
                       <i className="fa fa-angle-double-left"></i>
+                  </button>
+
+                  <button 
+                      onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+                      disabled={page === 1}
+                      className="pagination-button"
+                      title="Trang trước"
+                  >
+                      <i className="fa fa-angle-left"></i>
+                  </button>
+
+                  {Array.from({ length: Math.ceil(count / limit) }, (_, i) => i + 1)
+                      .filter(pageNum => {
+                          if (pageNum === 1 || pageNum === Math.ceil(count / limit)) return true;
+                          return Math.abs(pageNum - page) <= 2;
+                      })
+                      .map((pageNum, index, array) => {
+                          if (index > 0 && array[index - 1] !== pageNum - 1) {
+                              return [
+                                  <span key={`ellipsis-${pageNum}`} className="pagination-ellipsis">...</span>,
+                                  <button
+                                      key={pageNum}
+                                      onClick={() => setPage(pageNum)}
+                                      className={`pagination-button ${page === pageNum ? 'active' : ''}`}
+                                  >
+                                      {pageNum}
+                                  </button>
+                              ];
+                          }
+                          return (
+                              <button
+                                  key={pageNum}
+                                  onClick={() => setPage(pageNum)}
+                                  className={`pagination-button ${page === pageNum ? 'active' : ''}`}
+                              >
+                                  {pageNum}
+                              </button>
+                          );
+                      })}
+
+                  <button 
+                      onClick={() => setPage(prev => Math.min(prev + 1, Math.ceil(count / limit)))}
+                      disabled={page === Math.ceil(count / limit)}
+                      className="pagination-button"
+                      title="Trang sau"
+                  >
+                      <i className="fa fa-angle-right"></i>
+                  </button>
+
+                  <button 
+                      onClick={() => setPage(Math.ceil(count / limit))}
+                      disabled={page === Math.ceil(count / limit)}
+                      className="pagination-button"
+                      title="Trang cuối"
+                  >
+                      <i className="fa fa-angle-double-right"></i>
                   </button>
               </div>
           )}
