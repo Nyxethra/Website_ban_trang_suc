@@ -11,7 +11,7 @@ export default function UpdateCategory({ openUpdate, selectId, getAll }) {
   // Khởi tạo state input để lưu thông tin category
   const [input, setInput] = useState({})
 
-  // useEffect sẽ chạy khi selectId thay đổi
+  // useEffect sẽ chạy khi selectId thay đổi  
   useEffect(() => {
     // Hàm async để lấy thông tin category từ API
     const getCategory = async () => {
