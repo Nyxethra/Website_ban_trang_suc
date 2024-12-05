@@ -1,67 +1,76 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Statistic } from 'antd';
-import { UserOutlined, ShoppingCartOutlined, DollarCircleOutlined, TagsOutlined } from '@ant-design/icons';
-import { Line, Pie } from '@ant-design/plots';
-import axios from '../../../axios';
-import './Dashboard.css';
+// Import các thư viện và components cần thiết
+import React, { useEffect, useState } from 'react'; // Import React và các hooks cơ bản
+import { Card, Row, Col, Statistic } from 'antd'; // Import các components từ thư viện Ant Design
+import { UserOutlined, ShoppingCartOutlined, DollarCircleOutlined, TagsOutlined } from '@ant-design/icons'; // Import các icons
+import { Line, Pie } from '@ant-design/plots'; // Import biểu đồ từ thư viện @ant-design/plots
+import axios from '../../../axios'; // Import axios đã được cấu hình
+import './Dashboard.css'; // Import file CSS
 
+// Component Dashboard chính
 const Dashboard = () => {
+  // Khởi tạo state cho các thống kê tổng quan
   const [stats, setStats] = useState({
-    totalUsers: 0,
-    totalOrders: 0,
-    totalRevenue: 0,
-    totalProducts: 0
+    totalUsers: 0,    // Tổng số người dùng
+    totalOrders: 0,   // Tổng số đơn hàng
+    totalRevenue: 0,  // Tổng doanh thu
+    totalProducts: 0  // Tổng số sản phẩm
   });
   
-  const [salesData, setSalesData] = useState([]);
-  const [categoryData, setCategoryData] = useState([]);
-  const [todayOrders, setTodayOrders] = useState(0);
-  const [todayRevenue, setTodayRevenue] = useState(0);
-  const [topProduct, setTopProduct] = useState(null);
-  const [completionRate, setCompletionRate] = useState(0);
-  const [orders, setOrders] = useState([]);
+  // Khởi tạo các state khác
+  const [salesData, setSalesData] = useState([]); // Dữ liệu biểu đồ doanh số
+  const [categoryData, setCategoryData] = useState([]); // Dữ liệu danh mục
+  const [todayOrders, setTodayOrders] = useState(0); // Số đơn hàng hôm nay
+  const [todayRevenue, setTodayRevenue] = useState(0); // Doanh thu hôm nay
+  const [topProduct, setTopProduct] = useState(null); // Sản phẩm bán chạy nhất
+  const [completionRate, setCompletionRate] = useState(0); // Tỷ lệ hoàn thành
+  const [orders, setOrders] = useState([]); // Danh sách đơn hàng
 
   useEffect(() => {
+    // Hàm async để fetch dữ liệu từ server
     const fetchData = async () => {
       try {
-        // Lấy và tính toán các thống kê
-        const ordersResponse = await axios.get('/order/all');
+        // 1. Lấy dữ liệu đơn hàng và tính toán thống kê cơ bản
+        const ordersResponse = await axios.get('/order/all'); // Lấy tất cả đơn hàng
         const ordersData = ordersResponse.data;
-        setOrders(ordersData);
+        setOrders(ordersData); // Lưu danh sách đơn hàng vào state
         
-        const totalOrders = ordersData.length;
+        const totalOrders = ordersData.length; // Tổng số đơn hàng
+        // Tính tổng doanh thu từ các đơn đã thanh toán
         const totalRevenue = ordersData
           .filter(order => order.paymentStatus === "Đã thanh toán")
           .reduce((sum, order) => sum + order.price, 0);
-
-        // Tính toán đơn hàng và doanh thu hôm nay
+  
+        // 2. Tính toán đơn hàng và doanh thu của ngày hôm nay
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0); // Reset về đầu ngày
         
+        // Lọc đơn hàng của ngày hôm nay
         const todayOrdersData = ordersData.filter(order => {
           const orderDate = new Date(order.createdAt);
           return orderDate >= today;
         });
         
-        setTodayOrders(todayOrdersData.length);
+        setTodayOrders(todayOrdersData.length); // Lưu số đơn hàng hôm nay
+        // Tính doanh thu hôm nay
         setTodayRevenue(
           todayOrdersData
             .filter(order => order.paymentStatus === "Đã thanh toán")
             .reduce((sum, order) => sum + order.price, 0)
         );
-
-        // Tính tỷ lệ hoàn thành
+  
+        // 3. Tính tỷ lệ hoàn thành đơn hàng
         const completedOrders = ordersData.filter(order => 
           order.confimationStatus === "Đã xác nhận" || order.confimationStatus === "Hoàn thành"
         ).length;
         setCompletionRate(((completedOrders / totalOrders) * 100).toFixed(1));
-
+  
+        // 4. Lấy thông tin sản phẩm
         const productsResponse = await axios.get('/product');
         const products = productsResponse.data;
         const totalProducts = products.length;
-
-        // Tìm sản phẩm bán chạy nhất
-        const productSales = {};
+  
+        // 5. Tìm sản phẩm bán chạy nhất
+        const productSales = {}; // Object lưu số lượng bán của từng sản phẩm
         ordersData.forEach(order => {
           order.product.forEach(item => {
             if (item.productId) {
@@ -70,83 +79,77 @@ const Dashboard = () => {
           });
         });
         
+        // Tìm sản phẩm có số lượng bán cao nhất
         if (Object.keys(productSales).length > 0) {
           const topProductId = Object.entries(productSales)
             .sort(([,a], [,b]) => b - a)[0][0];
           const topProductData = products.find(p => p._id === topProductId);
           setTopProduct(topProductData);
         }
-
+  
+        // 6. Lấy thông tin người dùng
         const usersResponse = await axios.get('/user');
         const totalUsers = usersResponse.data.length;
-
+  
+        // Cập nhật state thống kê tổng quan
         setStats({
           totalUsers,
           totalOrders,
           totalRevenue,
           totalProducts
         });
-
-        // Tính toán dữ liệu biểu đồ doanh số theo tháng
-        const monthlyData = new Array(12).fill(0);
+  
+        // 7. Tính toán dữ liệu biểu đồ doanh số theo tháng
+        const monthlyData = new Array(12).fill(0); // Tạo mảng 12 tháng với giá trị ban đầu = 0
         ordersData.forEach(order => {
           const orderDate = new Date(order.createdAt);
           const monthIndex = orderDate.getMonth();
-          monthlyData[monthIndex]++;
+          monthlyData[monthIndex]++; // Tăng số đơn hàng của tháng tương ứng
         });
-
+  
+        // Định dạng dữ liệu cho biểu đồ doanh số
         setSalesData([
-          { month: 'T1', sales: monthlyData[0] },
-          { month: 'T2', sales: monthlyData[1] },
-          { month: 'T3', sales: monthlyData[2] },
-          { month: 'T4', sales: monthlyData[3] },
-          { month: 'T5', sales: monthlyData[4] },
-          { month: 'T6', sales: monthlyData[5] },
-          { month: 'T7', sales: monthlyData[6] },
-          { month: 'T8', sales: monthlyData[7] },
-          { month: 'T9', sales: monthlyData[8] },
-          { month: 'T10', sales: monthlyData[9] },
-          { month: 'T11', sales: monthlyData[10] },
-          { month: 'T12', sales: monthlyData[11] },
+          /* Chuyển đổi dữ liệu sang format {month: 'Tx', sales: value} */
         ]);
-
-        // Tính toán dữ liệu phân bố danh mục
+  
+        // 8. Tính toán dữ liệu phân bố danh mục
         const categoryStats = {};
         const categoryResponse = await axios.get('/category');
         const categories = categoryResponse.data;
-
-        // Khởi tạo tất cả danh mục với giá trị 0
+  
+        // Khởi tạo số lượng sản phẩm = 0 cho mỗi danh mục
         categories.forEach(category => {
           categoryStats[category._id] = 0;
         });
-
-        // Đếm số lượng sản phẩm cho mỗi danh mục
+  
+        // Đếm số lượng sản phẩm trong từng danh mục
         products.forEach(product => {
           if (product.categoryId) {
             categoryStats[product.categoryId]++;
           }
         });
-
-        // Chuyển đổi dữ liệu sang định dạng cho biểu đồ
+  
+        // Chuyển đổi dữ liệu sang định dạng cho biểu đồ tròn
         const categoryChartData = categories
           .map(category => ({
             category: category.name,
             value: categoryStats[category._id]
           }))
-          .filter(item => item.value > 0); // Chỉ hiển thị các danh mục có sản phẩm
-
+          .filter(item => item.value > 0); // Chỉ giữ lại danh mục có sản phẩm
+  
         setCategoryData(categoryChartData);
-
-        // Sắp xếp ordersData theo ngày tạo giảm dần để hiển thị các đơn hàng gần đây nhất
+  
+        // Sắp xếp đơn hàng theo thời gian mới nhất
         ordersData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
+  
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       }
     };
-
+  
+    // Gọi hàm fetchData khi component mount
     fetchData();
-  }, []);
+  }, []); // Dependencies rỗng -> chỉ chạy 1 lần khi component mount
 
   const lineConfig = {
     data: salesData,
