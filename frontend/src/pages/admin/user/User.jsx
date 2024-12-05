@@ -176,7 +176,7 @@ export default function User() {
                                     )}
                                 </td>
                                 <td>
-                                    <div className='action-buttons'>
+                                    <div className='action-buttons'>editingUser
                                         <button 
                                             className='btn-action btn-edit'
                                             onClick={() => showModal(u)}
