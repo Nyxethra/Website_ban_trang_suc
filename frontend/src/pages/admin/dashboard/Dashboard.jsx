@@ -29,69 +29,92 @@ const Dashboard = () => {
     // Hàm async để fetch dữ liệu từ server
     const fetchData = async () => {
       try {
-        // 1. Lấy dữ liệu đơn hàng và tính toán thống kê cơ bản
-        const ordersResponse = await axios.get('/order/all'); // Lấy tất cả đơn hàng
+                // PHẦN 1: XỬ LÝ DỮ LIỆU ĐƠN HÀNG
+        // Gọi API để lấy tất cả đơn hàng
+        const ordersResponse = await axios.get('/order/all');
+        // Lấy dữ liệu đơn hàng từ response
         const ordersData = ordersResponse.data;
-        setOrders(ordersData); // Lưu danh sách đơn hàng vào state
-        
-        const totalOrders = ordersData.length; // Tổng số đơn hàng
-        // Tính tổng doanh thu từ các đơn đã thanh toán
+        // Lưu danh sách đơn hàng vào state để sử dụng sau này
+        setOrders(ordersData);
+
+        // Đếm tổng số đơn hàng
+        const totalOrders = ordersData.length;
+        // Tính tổng doanh thu bằng cách:
+        // 1. Lọc ra các đơn hàng đã thanh toán
+        // 2. Dùng reduce để cộng dồn giá trị price của từng đơn hàng
         const totalRevenue = ordersData
           .filter(order => order.paymentStatus === "Đã thanh toán")
           .reduce((sum, order) => sum + order.price, 0);
-  
-        // 2. Tính toán đơn hàng và doanh thu của ngày hôm nay
+
+        // PHẦN 2: TÍNH TOÁN CHO NGÀY HÔM NAY
+        // Tạo đối tượng Date cho ngày hôm nay
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Reset về đầu ngày
-        
-        // Lọc đơn hàng của ngày hôm nay
+        // Reset thời gian về 00:00:00 để so sánh chính xác theo ngày
+        today.setHours(0, 0, 0, 0);
+
+        // Lọc ra các đơn hàng của ngày hôm nay bằng cách:
+        // So sánh thời gian tạo đơn với thời điểm đầu ngày hôm nay
         const todayOrdersData = ordersData.filter(order => {
           const orderDate = new Date(order.createdAt);
           return orderDate >= today;
         });
-        
-        setTodayOrders(todayOrdersData.length); // Lưu số đơn hàng hôm nay
-        // Tính doanh thu hôm nay
+
+        // Lưu số lượng đơn hàng hôm nay vào state
+        setTodayOrders(todayOrdersData.length);
+        // Tính và lưu doanh thu của ngày hôm nay:
+        // 1. Lọc các đơn đã thanh toán
+        // 2. Cộng dồn giá trị các đơn hàng
         setTodayRevenue(
           todayOrdersData
             .filter(order => order.paymentStatus === "Đã thanh toán")
             .reduce((sum, order) => sum + order.price, 0)
         );
   
-        // 3. Tính tỷ lệ hoàn thành đơn hàng
+                // Tính tỷ lệ hoàn thành đơn hàng
         const completedOrders = ordersData.filter(order => 
+          // Lọc ra các đơn hàng có trạng thái là "Đã xác nhận" hoặc "Hoàn thành"
           order.confimationStatus === "Đã xác nhận" || order.confimationStatus === "Hoàn thành"
-        ).length;
+        ).length; // Đếm số lượng đơn hàng thỏa điều kiện
+
+        // Tính phần trăm đơn hàng hoàn thành:
+        // 1. Lấy số đơn hoàn thành chia cho tổng số đơn
+        // 2. Nhân với 100 để ra tỷ lệ phần trăm
+        // 3. toFixed(1) làm tròn đến 1 chữ số thập phân
         setCompletionRate(((completedOrders / totalOrders) * 100).toFixed(1));
-  
         // 4. Lấy thông tin sản phẩm
         const productsResponse = await axios.get('/product');
         const products = productsResponse.data;
         const totalProducts = products.length;
   
-        // 5. Tìm sản phẩm bán chạy nhất
-        const productSales = {}; // Object lưu số lượng bán của từng sản phẩm
+        // PHẦN 5: TÌM SẢN PHẨM BÁN CHẠY NHẤT
+        // Tạo object rỗng để lưu số lượng bán của từng sản phẩm
+        const productSales = {};
+        // Duyệt qua từng đơn hàng và sản phẩm trong đơn để tính tổng số lượng bán
         ordersData.forEach(order => {
           order.product.forEach(item => {
             if (item.productId) {
+              // Cộng dồn số lượng bán cho mỗi sản phẩm
               productSales[item.productId] = (productSales[item.productId] || 0) + item.quantity;
             }
           });
         });
-        
-        // Tìm sản phẩm có số lượng bán cao nhất
+
+        // Nếu có dữ liệu bán hàng
         if (Object.keys(productSales).length > 0) {
+          // Chuyển object thành mảng, sắp xếp giảm dần và lấy ID sản phẩm bán chạy nhất
           const topProductId = Object.entries(productSales)
             .sort(([,a], [,b]) => b - a)[0][0];
+          // Tìm thông tin chi tiết của sản phẩm bán chạy nhất
           const topProductData = products.find(p => p._id === topProductId);
           setTopProduct(topProductData);
         }
   
-        // 6. Lấy thông tin người dùng
+        // PHẦN 6: THỐNG KÊ NGƯỜI DÙNG
+        // Lấy danh sách người dùng và đếm tổng số
         const usersResponse = await axios.get('/user');
         const totalUsers = usersResponse.data.length;
   
-        // Cập nhật state thống kê tổng quan
+        // Cập nhật state chứa các thống kê tổng quan
         setStats({
           totalUsers,
           totalOrders,
@@ -99,12 +122,14 @@ const Dashboard = () => {
           totalProducts
         });
   
-        // 7. Tính toán dữ liệu biểu đồ doanh số theo tháng
-        const monthlyData = new Array(12).fill(0); // Tạo mảng 12 tháng với giá trị ban đầu = 0
+        // PHẦN 7: THỐNG KÊ DOANH SỐ THEO THÁNG
+        // Tạo mảng 12 phần tử đại diện cho 12 tháng, giá trị ban đầu = 0
+        const monthlyData = new Array(12).fill(0);
+        // Duyệt qua từng đơn hàng để đếm số đơn theo tháng
         ordersData.forEach(order => {
           const orderDate = new Date(order.createdAt);
           const monthIndex = orderDate.getMonth();
-          monthlyData[monthIndex]++; // Tăng số đơn hàng của tháng tương ứng
+          monthlyData[monthIndex]++; // Tăng số đơn của tháng tương ứng
         });
   
         // Định dạng dữ liệu cho biểu đồ doanh số
@@ -112,31 +137,34 @@ const Dashboard = () => {
           /* Chuyển đổi dữ liệu sang format {month: 'Tx', sales: value} */
         ]);
   
-        // 8. Tính toán dữ liệu phân bố danh mục
+        // PHẦN 8: THỐNG KÊ PHÂN BỐ DANH MỤC
+        // Tạo object rỗng để lưu số lượng sản phẩm của từng danh mục
         const categoryStats = {};
+        // Lấy danh sách danh mục từ server
         const categoryResponse = await axios.get('/category');
         const categories = categoryResponse.data;
   
-        // Khởi tạo số lượng sản phẩm = 0 cho mỗi danh mục
+        // Khởi tạo số lượng = 0 cho mỗi danh mục
         categories.forEach(category => {
           categoryStats[category._id] = 0;
         });
   
-        // Đếm số lượng sản phẩm trong từng danh mục
+        // Đếm số sản phẩm trong từng danh mục
         products.forEach(product => {
           if (product.categoryId) {
             categoryStats[product.categoryId]++;
           }
         });
   
-        // Chuyển đổi dữ liệu sang định dạng cho biểu đồ tròn
+        // Chuyển đổi dữ liệu sang định dạng phù hợp cho biểu đồ tròn
         const categoryChartData = categories
           .map(category => ({
             category: category.name,
             value: categoryStats[category._id]
           }))
-          .filter(item => item.value > 0); // Chỉ giữ lại danh mục có sản phẩm
+          .filter(item => item.value > 0); // Loại bỏ danh mục không có sản phẩm
   
+        // Cập nhật state dữ liệu biểu đồ danh mục
         setCategoryData(categoryChartData);
   
         // Sắp xếp đơn hàng theo thời gian mới nhất
@@ -218,19 +246,28 @@ const Dashboard = () => {
   };
 
   return (
+    // Container chính của dashboard
     <div className="dashboard-container">
+      // Tiêu đề chính của trang
       <h2 className="dashboard-title">Tổng quan</h2>
       
+      // Row 1: Thống kê tổng quan - sử dụng Grid system của Ant Design
+      // gutter=[16,16] tạo khoảng cách 16px giữa các cột và hàng
       <Row gutter={[16, 16]} className="stats-row">
+        // Cột 1: Thống kê người dùng
+        // xs=24 (full width trên mobile), sm=12 (1/2 width trên tablet), lg=6 (1/4 width trên desktop)
         <Col xs={24} sm={12} lg={6}>
           <Card className="stat-card">
+            // Component Statistic của Ant Design để hiển thị số liệu
             <Statistic
               title={<span className="stat-title">Tổng người dùng</span>}
-              value={stats.totalUsers}
-              prefix={<UserOutlined className="stat-icon user-icon" />}
+              value={stats.totalUsers} // Giá trị từ state
+              prefix={<UserOutlined className="stat-icon user-icon" />} // Icon người dùng
             />
           </Card>
         </Col>
+
+        // Cột 2: Thống kê đơn hàng - cấu trúc tương tự
         <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
@@ -240,16 +277,20 @@ const Dashboard = () => {
             />
           </Card>
         </Col>
+
+        // Cột 3: Thống kê doanh thu
         <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
               title="Doanh thu"
-              value={stats.totalRevenue.toLocaleString()}
+              value={stats.totalRevenue.toLocaleString()} // Format số có dấu phẩy
               prefix={<DollarCircleOutlined className="revenue-icon" />}
-              suffix="VNĐ"
+              suffix="VNĐ" // Đơn vị tiền tệ
             />
           </Card>
         </Col>
+
+        // Cột 4: Thống kê sản phẩm
         <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
@@ -261,44 +302,55 @@ const Dashboard = () => {
         </Col>
       </Row>
 
+      // Row 2: Biểu đồ thống kê
       <Row gutter={[16, 16]} className="charts-row">
+        // Cột 1: Biểu đồ doanh số (chiếm 15/24 width)
         <Col xs={24} lg={15}>
           <Card 
-            title={<span className="chart-title">Biểu đồ doanh số</span>} 
+            title={<span className="chart-title">Biểu đồ doanh số</span>}
             className="chart-card"
-            bordered={false}
+            bordered={false} // Không hiển thị viền
           >
-            <Line {...lineConfig} />
+            // Component Line chart từ @ant-design/plots
+            <Line {...lineConfig} /> // Truyền cấu hình biểu đồ
           </Card>
         </Col>
+
+        // Cột 2: Biểu đồ phân bố danh mục (chiếm 9/24 width)
         <Col xs={24} lg={9}>
           <Card 
-            title={<span className="chart-title">Phân bố danh mục</span>} 
+            title={<span className="chart-title">Phân bố danh mục</span>}
             className="chart-card"
             bordered={false}
           >
+            // Component Pie chart từ @ant-design/plots
             <Pie {...pieConfig} />
           </Card>
         </Col>
       </Row>
 
+      // Row 3: Chi tiết thống kê
       <Row gutter={[16, 16]} className="details-row">
+        // Cột 1: Đơn hàng gần đây (chiếm 14/24 width)
         <Col xs={24} lg={14}>
           <Card 
-            title={<span className="chart-title">Đơn hàng gần đây</span>} 
+            title={<span className="chart-title">Đơn hàng gần đây</span>}
             className="detail-card"
             bordered={false}
           >
             <div className="recent-orders">
-              {/* Hiển thị 5 đơn hàng gần nhất */}
+              // Lặp qua 5 đơn hàng gần nhất
               {orders?.slice(0, 5).map((order, index) => (
                 <div key={index} className="order-item">
                   <div className="order-info">
+                    // Hiển thị 6 ký tự cuối của ID đơn hàng
                     <span className="order-id">#{order._id.slice(-6)}</span>
+                    // Format ngày tháng theo định dạng Việt Nam
                     <span className="order-date">
                       {new Date(order.createdAt).toLocaleDateString('vi-VN')}
                     </span>
                   </div>
+                  // Format giá trị đơn hàng có dấu phẩy
                   <div className="order-amount">
                     {order.price.toLocaleString()} VNĐ
                   </div>
@@ -308,13 +360,15 @@ const Dashboard = () => {
           </Card>
         </Col>
         
+        // Cột 2: Thống kê nhanh (chiếm 10/24 width)
         <Col xs={24} lg={10}>
           <Card 
-            title={<span className="chart-title">Thống kê nhanh</span>} 
+            title={<span className="chart-title">Thống kê nhanh</span>}
             className="detail-card"
             bordered={false}
           >
             <div className="quick-stats">
+              // Hiển thị các thống kê nhanh
               <div className="stat-item">
                 <span className="stat-label">Đơn hàng hôm nay</span>
                 <span className="stat-value">{todayOrders}</span>
@@ -325,6 +379,7 @@ const Dashboard = () => {
               </div>
               <div className="stat-item">
                 <span className="stat-label">Sản phẩm bán chạy nhất</span>
+                // Hiển thị tên sản phẩm hoặc 'N/A' nếu không có
                 <span className="stat-value">{topProduct?.name || 'N/A'}</span>
               </div>
               <div className="stat-item">
