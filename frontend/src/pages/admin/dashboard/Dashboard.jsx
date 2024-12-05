@@ -87,25 +87,36 @@ const Dashboard = () => {
         const totalProducts = products.length;
   
         // PHẦN 5: TÌM SẢN PHẨM BÁN CHẠY NHẤT
-        // Tạo object rỗng để lưu số lượng bán của từng sản phẩm
+        // Khai báo object rỗng để lưu trữ thống kê số lượng bán của từng sản phẩm
+        // Cấu trúc: { productId: totalQuantity }
         const productSales = {};
-        // Duyệt qua từng đơn hàng và sản phẩm trong đơn để tính tổng số lượng bán
+
+        // Duyệt qua mảng đơn hàng (ordersData)
         ordersData.forEach(order => {
+          // Với mỗi đơn hàng, duyệt qua mảng sản phẩm trong đơn
           order.product.forEach(item => {
+            // Kiểm tra xem sản phẩm có ID hợp lệ không
             if (item.productId) {
-              // Cộng dồn số lượng bán cho mỗi sản phẩm
+              // Cộng dồn số lượng bán cho sản phẩm
+              // productSales[item.productId] || 0: lấy giá trị hiện tại hoặc 0 nếu chưa có
+              // + item.quantity: cộng thêm số lượng từ đơn hàng hiện tại
               productSales[item.productId] = (productSales[item.productId] || 0) + item.quantity;
             }
           });
         });
 
-        // Nếu có dữ liệu bán hàng
+        // Kiểm tra xem có dữ liệu bán hàng không
         if (Object.keys(productSales).length > 0) {
-          // Chuyển object thành mảng, sắp xếp giảm dần và lấy ID sản phẩm bán chạy nhất
+          // Object.entries(productSales): chuyển object thành mảng các cặp [key, value]
+          // sort(([,a], [,b]) => b - a): sắp xếp giảm dần theo số lượng bán
+          // [0][0]: lấy phần tử đầu tiên (bán chạy nhất) và lấy key (productId)
           const topProductId = Object.entries(productSales)
             .sort(([,a], [,b]) => b - a)[0][0];
-          // Tìm thông tin chi tiết của sản phẩm bán chạy nhất
+
+          // Tìm thông tin chi tiết của sản phẩm bán chạy nhất trong mảng products
           const topProductData = products.find(p => p._id === topProductId);
+          
+          // Cập nhật state với thông tin sản phẩm bán chạy nhất
           setTopProduct(topProductData);
         }
   
