@@ -1,3 +1,4 @@
+// Import các thư viện và components cần thiết
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal, Form, Input, Checkbox, message } from 'antd';
@@ -5,15 +6,19 @@ import axios from '../../../axios';
 import './User.css';
 
 export default function User() {
+    // Lấy thông tin người dùng hiện tại từ Redux store
     const { currentUser } = useSelector(state => state.user);
-    const [data, setData] = useState([]);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [editingUser, setEditingUser] = useState(null);
-    const [form] = Form.useForm();
-    const [passwordModalVisible, setPasswordModalVisible] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [passwordForm] = Form.useForm();
+    
+    // Khai báo các state cần thiết
+    const [data, setData] = useState([]); // Lưu danh sách người dùng
+    const [modalVisible, setModalVisible] = useState(false); // Điều khiển hiển thị modal thêm/sửa
+    const [editingUser, setEditingUser] = useState(null); // Lưu thông tin user đang được chỉnh sửa
+    const [form] = Form.useForm(); // Form cho thêm/sửa user
+    const [passwordModalVisible, setPasswordModalVisible] = useState(false); // Điều khiển hiển thị modal đổi mật khẩu
+    const [selectedUser, setSelectedUser] = useState(null); // Lưu user được chọn để đổi mật khẩu
+    const [passwordForm] = Form.useForm(); // Form cho đổi mật khẩu
 
+    // Hàm lấy danh sách người dùng từ API
     const getData = async () => {
         try {
             const res = await axios.get('/user');
@@ -24,10 +29,12 @@ export default function User() {
         }
     }
 
+    // Gọi API lấy data khi component mount
     useEffect(() => {
         getData();
     }, []);
 
+    // Hàm cập nhật quyền admin cho user
     const handleUpdate = async (admin, id) => {
         try {
             await axios.put(`/user/update/${id}`, { admin: !admin });
@@ -39,6 +46,7 @@ export default function User() {
         }
     }
 
+    // Hàm xóa người dùng
     const handleDelete = async (id) => {
         try {
             await axios.delete(`user/delete/${id}`);
@@ -50,10 +58,11 @@ export default function User() {
         }
     }
 
-    // Mở modal để thêm/sửa người dùng
+    // Hàm hiển thị modal thêm/sửa user
     const showModal = (user = null) => {
         setEditingUser(user);
         if (user) {
+            // Nếu là sửa, điền thông tin user vào form
             form.setFieldsValue({
                 name: user.name,
                 email: user.email,
@@ -62,23 +71,24 @@ export default function User() {
                 admin: user.admin
             });
         } else {
+            // Nếu là thêm mới, reset form
             form.resetFields();
         }
         setModalVisible(true);
     };
 
-    // Xử lý khi submit form
+    // Xử lý khi submit form thêm/sửa user
     const handleSubmit = async (values) => {
         try {
             if (editingUser) {
-                // Cập nhật người dùng
+                // Nếu đang sửa user
                 await axios.put(`/user/update/${editingUser._id}`, values);
                 message.success('Cập nhật người dùng thành công');
             } else {
-                // Thêm người dùng mới
+                // Nếu đang thêm user mới
                 await axios.post('/user/register', {
                     ...values,
-                    password: values.password || '123456' // Mật khẩu mặc định
+                    password: values.password || '123456' // Mật khẩu mặc định nếu không nhập
                 });
                 message.success('Thêm người dùng thành công');
             }
@@ -91,6 +101,7 @@ export default function User() {
         }
     };
 
+    // Xử lý đổi mật khẩu
     const handleChangePassword = async (values) => {
         try {
             await axios.put(`/user/update/${selectedUser._id}`, {
@@ -105,11 +116,20 @@ export default function User() {
         }
     };
 
+    // Hiển thị modal đổi mật khẩu
     const showPasswordModal = (user) => {
         setSelectedUser(user);
         setPasswordModalVisible(true);
         passwordForm.resetFields();
     };
+
+    // Phần return JSX gồm:
+    // 1. Header với nút thêm user
+    // 2. Bảng hiển thị danh sách user
+    // 3. Modal thêm/sửa user
+    // 4. Modal đổi mật khẩu
+    // Mỗi user trong bảng có các nút: sửa, đổi mật khẩu, xóa (trừ user hiện tại)
+    // Checkbox để set/unset quyền admin (trừ user hiện tại)
 
     return (
         <div className='user-management'>

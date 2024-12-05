@@ -1,132 +1,151 @@
-import React,{ useEffect, useState } from 'react'
-import {imgDb} from '../../../firebase'
-import { ref, uploadBytesResumable,getDownloadURL } from 'firebase/storage'
-import axios from '../../../axios'
+// Import các thư viện cần thiết
+import React,{ useEffect, useState } from 'react' // Import React và hooks
+import {imgDb} from '../../../firebase' // Import cấu hình firebase storage
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage' // Import các hàm xử lý storage từ firebase
+import axios from '../../../axios' // Import axios đã được cấu hình
 
-
+// Component UpdateProduct nhận vào các props để xử lý
 export default function UpdateProduct({openUpdate, setOpenUpdate, selectId, getAll}) {
-    const [image,setImage]=useState("")
-    const [imageUrl,setImageUrl]=useState("")
-    const [subImage,setSubImage]=useState("")
-    const [subImageUrl,setSubImageUrl]=useState([])
-  const [input,setInput]=useState({})
-  const [category,setCategory]=useState()
-  const [data,setData]=useState([])
-  const [percent, setPercent] = useState(0);
-  const [size,setSize]=useState([])
-  const handleChange=(e)=>{
-    setInput(prev=>{
-        return {...prev,[e.target.name]:e.target.value}
-      })
-  }
-  const handleSize=(event)=>{
-    const selectedSize = event.target.value;
-    if (size.includes(selectedSize)) {
-      setSize(size.filter(s => s !== selectedSize));
-    } else{
-      setSize([...size,selectedSize])
-    }
-  }
+    // Khai báo các state quản lý ảnh
+    const [image,setImage] = useState("") // Ảnh chính
+    const [imageUrl,setImageUrl] = useState("") // URL ảnh chính
+    const [subImage,setSubImage] = useState("") // Ảnh phụ
+    const [subImageUrl,setSubImageUrl] = useState([]) // Mảng URL ảnh phụ
+    
+    // Các state khác
+    const [input,setInput] = useState({}) // Dữ liệu form
+    const [category,setCategory] = useState() // Danh mục sản phẩm
+    const [data,setData] = useState([]) // Dữ liệu sản phẩm
+    const [percent, setPercent] = useState(0) // Phần trăm upload
+    const [size,setSize] = useState([]) // Kích thước sản phẩm
 
-  useEffect(()=>{
-    const getProduct=async()=>{
-      try {
-        const res=await axios.get(`/product/${selectId}`)
-        setData(res.data)
-        setSize(res.data.size || [])
-        setImageUrl(res.data.image || "")
-        setSubImageUrl(res.data.sub_image || [])
-        setInput({
-            name:res.data.name,
-            categoryId:res.data.categoryId,
-            price:res.data.price,
-            description:res.data.description,
+    // Hàm xử lý thay đổi input
+    const handleChange = (e) => {
+        setInput(prev => ({...prev, [e.target.name]: e.target.value}))
+    }
 
-        })
-      } catch (err) {
-        console.log(err)
-      }
+    // Hàm xử lý chọn size
+    const handleSize = (event) => {
+        const selectedSize = event.target.value
+        if (size.includes(selectedSize)) {
+            setSize(size.filter(s => s !== selectedSize)) // Bỏ chọn size
+        } else {
+            setSize([...size, selectedSize]) // Thêm size mới
+        }
     }
-    getProduct()
-   },[selectId])
- useEffect(()=>{
-  const getCategory=async()=>{
-    try {
-      const res=await axios.get('/category')
-      setCategory(res.data)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-  getCategory()
- },[])
-  const upload=async(file,urlType)=>{
-    try {
-      const imgRef = ref(imgDb, `/product/${file.name}`);
-      const uploadTask = uploadBytesResumable(imgRef, file);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-            const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-            setPercent(percent);
-        },
-        (err) => console.log(err),
-        async () => {
-            const url = await getDownloadURL(uploadTask.snapshot.ref);
-            if(urlType === "sub_image")
-            {
-                const newImageSub=[...subImageUrl]
-                newImageSub.push(url)
-                setSubImageUrl(newImageSub)
+
+    // Hook lấy thông tin sản phẩm khi selectId thay đổi
+    useEffect(() => {
+        const getProduct = async () => {
+            try {
+                const res = await axios.get(`/product/${selectId}`)
+                // Cập nhật các state với dữ liệu từ API
+                setData(res.data)
+                setSize(res.data.size || [])
+                setImageUrl(res.data.image || "")
+                setSubImageUrl(res.data.sub_image || [])
+                setInput({
+                    name: res.data.name,
+                    categoryId: res.data.categoryId,
+                    price: res.data.price,
+                    description: res.data.description,
+                })
+            } catch (err) {
+                console.log(err)
             }
-            if(urlType === "image")
-            {
-                setImageUrl(url)
+        }
+        getProduct()
+    }, [selectId])
+
+    // Hook lấy danh sách danh mục
+    useEffect(() => {
+        const getCategory = async () => {
+            try {
+                const res = await axios.get('/category')
+                setCategory(res.data)
+            } catch (err) {
+                console.log(err)
             }
-          }
-    );
-  }catch (err) {
-    console.error("Error uploading image:", err);
+        }
+        getCategory()
+    }, [])
+
+    // Hàm upload ảnh lên firebase
+    const upload = async (file, urlType) => {
+        try {
+            const imgRef = ref(imgDb, `/product/${file.name}`)
+            const uploadTask = uploadBytesResumable(imgRef, file)
+            
+            // Theo dõi tiến trình upload
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                    const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                    setPercent(percent)
+                },
+                (err) => console.log(err),
+                async () => {
+                    // Lấy URL sau khi upload thành công
+                    const url = await getDownloadURL(uploadTask.snapshot.ref)
+                    if(urlType === "sub_image") {
+                        setSubImageUrl(prev => [...prev, url])
+                    }
+                    if(urlType === "image") {
+                        setImageUrl(url)
+                    }
+                }
+            )
+        } catch (err) {
+            console.error("Error uploading image:", err)
+        }
     }
-  }
 
-  const handleUpdate=async(e)=>{
-    e.preventDefault()
-    try {
-      const res=await axios.put(`/product/update/${selectId}`,{
-        name:input.name,
-        categoryId:input.categoryId,
-        price:input.price,
-        description:input.description,
-        size:size,
-        image:imageUrl,
-        sub_image:subImageUrl
-      })
-      getAll()
-      alert("success")
-      setImage('')
-      setImageUrl("")
-      setSubImage("")
-      setSubImageUrl("")
-    } catch (err) {
-      console.log(err)
+    // Hàm xử lý cập nhật sản phẩm
+    const handleUpdate = async (e) => {
+        e.preventDefault()
+        try {
+            await axios.put(`/product/update/${selectId}`, {
+                name: input.name,
+                categoryId: input.categoryId,
+                price: input.price,
+                description: input.description,
+                size: size,
+                image: imageUrl,
+                sub_image: subImageUrl
+            })
+            getAll() // Refresh danh sách
+            alert("success")
+            // Reset các state
+            setImage('')
+            setImageUrl("")
+            setSubImage("")
+            setSubImageUrl("")
+        } catch (err) {
+            console.log(err)
+        }
     }
-  }
-  useEffect(()=>{
-    {image && upload(image,"image")}
-  },[image])
-  useEffect(()=>{
-    {subImage && upload(subImage,"sub_image")}
-  },[subImage])
-  const close = () => {
-    setOpenUpdate(false);
-  }
-  console.log(input.categoryId)
 
-  const handleDeleteSubImage = (indexToDelete) => {
-    setSubImageUrl(prevImages => prevImages.filter((_, index) => index !== indexToDelete));
-  };
+    // Hooks xử lý upload ảnh khi có thay đổi
+    useEffect(() => {
+        image && upload(image, "image")
+    }, [image])
 
+    useEffect(() => {
+        subImage && upload(subImage, "sub_image")
+    }, [subImage])
+
+    // Hàm đóng modal
+    const close = () => {
+        setOpenUpdate(false)
+    }
+
+    // Hàm xóa ảnh phụ
+    const handleDeleteSubImage = (indexToDelete) => {
+        setSubImageUrl(prevImages => prevImages.filter((_, index) => index !== indexToDelete))
+    }
+
+    // Phần return JSX hiển thị form cập nhật trong modal
+    // Gồm các input cho tên, danh mục, giá, mô tả, size và ảnh
   return (
     <>
       {openUpdate && (
